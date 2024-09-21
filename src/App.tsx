@@ -323,7 +323,7 @@ const App: React.FC = () => {
 			</div>
 
 			<footer className="copyright">
-				2024 Elias Ahlers
+				2024 Elias Ahlers - <a href="https://github.com/EliasAhlers/course-picker">GitHub</a>
 			</footer>
 		</div>
 	);
