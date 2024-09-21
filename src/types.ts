@@ -18,4 +18,10 @@ export interface ScheduleItem {
     isLecture: boolean;
 }
 
-export type Conflict = [number, number];
+export interface TimeSlot {
+    day: string;
+    start: number;
+    end: number;
+}
+
+export type Conflict = number[]; // Array of course IDs

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Course, Conflict, ScheduleItem } from './types';
+import { Course, Conflict, ScheduleItem, TimeSlot } from './types';
 import './App.css';
 import { courses } from './courses';
 
@@ -12,6 +12,7 @@ const App: React.FC = () => {
 	const [selectedSemester, setSelectedSemester] = useState<string>("WiSe 24/25");
 	const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
 	const [showBachelorCourses, setShowBachelorCourses] = useState<boolean>(false);
+
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -36,51 +37,97 @@ const App: React.FC = () => {
 		);
 	};
 
+	useEffect(() => {
+		const newConflicts = detectConflicts(selectedCourses);
+		setConflicts(newConflicts);
+		localStorage.setItem('selectedCourses', JSON.stringify(selectedCourses));
+	}, [selectedCourses]);
+
 	const detectConflicts = (courses: Course[]): Conflict[] => {
 		const conflicts: Conflict[] = [];
 		for (let i = 0; i < courses.length; i++) {
-			for (let j = i + 1; j < courses.length; j++) {
-				if (hasTimeConflict(courses[i], courses[j])) {
-					conflicts.push([courses[i].id, courses[j].id]);
-				}
+			const localConflicts = getConflicts(courses[i]);
+			if (localConflicts.length > 0) {
+				conflicts.push(localConflicts);
 			}
+			// for (let j = i + 1; j < courses.length; j++) {
+			// 	if (hasTimeConflict(courses[i], courses[j])) {
+			// 		conflicts.push([courses[i].id, courses[j].id]);
+			// 	}
+			// }
 		}
 		return conflicts;
 	};
 
-	const hasTimeConflict = (course1: Course, course2: Course): boolean => {
-		if (!course1.schedule || !course2.schedule) return false;
-		if (course1.semester !== course2.semester) return false;
-
-		const times1 = getCourseTimes(course1);
-		const times2 = getCourseTimes(course2);
-
+	const hasLectureConflict = (times1: TimeSlot[], times2: TimeSlot[]): boolean => {
 		for (const time1 of times1) {
 			for (const time2 of times2) {
-				if (time1.day === time2.day &&
-					((time1.start <= time2.start && time2.start < time1.end) ||
-						(time2.start <= time1.start && time1.start < time2.end))) {
-					return true;
-				}
+				if (timeOverlap(time1, time2)) return true;
 			}
 		}
 		return false;
 	};
 
-	const getCourseTimes = (course: Course) => {
-		const times: { day: string; start: number; end: number }[] = [];
-		const addTimes = (zeitString?: string) => {
+	const timeOverlap = (time1: TimeSlot, time2: TimeSlot): boolean => {
+		return time1.day === time2.day &&
+			((time1.start <= time2.start && time2.start < time1.end) ||
+				(time2.start <= time1.start && time1.start < time2.end));
+	};
+
+	const getTimes = (course: Course) => {
+		const times: { lecture: TimeSlot[], tutorial: TimeSlot[] } = { lecture: [], tutorial: [] };
+		const addTimes = (zeitString: string | undefined, isLecture: boolean) => {
 			if (!zeitString) return;
 			const parts = zeitString.split(', ');
 			for (const part of parts) {
 				const [day, time] = part.split(' ');
 				const [start, end] = time.split('-').map(Number);
-				times.push({ day, start, end });
+				if (isLecture) {
+					times.lecture.push({ day, start, end });
+				} else {
+					times.tutorial.push({ day, start, end });
+				}
 			}
 		};
-		addTimes(course.schedule);
-		addTimes(course.tutorial);
+		addTimes(course.schedule, true);
+		addTimes(course.tutorial, false);
 		return times;
+	};
+
+	const getConflicts = (course: Course): Conflict => {
+		if (!course.schedule) return [];
+		if (course.semester !== selectedSemester) return [];
+
+		// check lecture times
+		for(const otherCourse of selectedCourses) {
+			if(otherCourse.id === course.id) continue;
+			if(hasLectureConflict(getTimes(course).lecture, getTimes(otherCourse).lecture)) {
+				return [course.id, otherCourse.id];
+			}
+		}
+
+		// check tutorial times, only for tutorials of this course
+		const times = getTimes(course);
+		const tutorialConflicts: Conflict = [];
+		for(const tutorialTimeSlot of times.tutorial) {
+			for(const otherCourse of selectedCourses) {
+				if(otherCourse.id === course.id) continue;
+				if(hasLectureConflict([tutorialTimeSlot], getTimes(otherCourse).lecture)) {
+					if(tutorialConflicts.length == 0) {
+						tutorialConflicts.push(course.id);
+						tutorialConflicts.push(otherCourse.id);
+					} else {
+						tutorialConflicts.push(otherCourse.id);
+					}
+				}
+			}
+		}
+
+		if(tutorialConflicts.length == times.tutorial.length+1) {
+			return tutorialConflicts;
+		}
+
+		return [];
 	};
 
 	const totalCP = selectedCourses.reduce((sum, course) => sum + course.cp, 0);
@@ -172,9 +219,14 @@ const App: React.FC = () => {
 				<div className="warning">
 					<b>Achtung:</b> Es gibt Zeitüberschneidungen zwischen ausgewählten Kursen!
 					<ul>
-						{conflicts.map(([id1, id2]) => (
-							<li key={`${id1}-${id2}`}>
-								{courses.find(c => c.id === id1)?.name} und {courses.find(c => c.id === id2)?.name}
+						{conflicts.map(conflict => (
+							<li key={conflict.join('-')}>
+								{conflict.map((id, index) => (
+									<span key={id}>
+										{courses.find(c => c.id === id)?.name}
+										{index < conflict.length - 1 && (index === conflict.length - 2 ? ' und ' : ', ')}
+									</span>
+								))}
 							</li>
 						))}
 					</ul>
