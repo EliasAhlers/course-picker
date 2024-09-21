@@ -1,42 +1,215 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.App {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	line-height: 1.6;
+	margin: 0;
+	padding: 40px;
+	max-width: 1200px;
+	margin: 0 auto;
+	background-color: #f9f9f9;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+h1,
+h2 {
+	color: #2c3e50;
+	margin-bottom: 20px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+h1 {
+	font-size: 2.5em;
+	border-bottom: 2px solid #3498db;
+	padding-bottom: 10px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+	width: 100%;
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.card {
-  padding: 2em;
+th,
+td {
+	border: none;
+	padding: 12px;
+	text-align: left;
 }
 
-.read-the-docs {
-  color: #888;
+th {
+	background-color: #3498db;
+	color: white;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.progress-bar {
+	width: 100%;
+	background-color: #e0e0e0;
+	border-radius: 10px;
+	overflow: hidden;
+	margin-bottom: 20px;
+}
+
+.progress {
+	height: 24px;
+	background-color: #3498db;
+	text-align: center;
+	line-height: 24px;
+	color: white;
+	transition: width 0.3s ease;
+}
+
+.progress span {
+	margin-left: 15px;
+}
+
+/* .FM {
+  background-color: #e8f4f8;
+}
+
+.PI {
+  background-color: #f8e8e8;
+} */
+
+.duplicate {
+	opacity: 0.6;
+	background-color: #f0f0f0 !important;
+	color: #888;
+}
+
+.conflict {
+	background-color: #ffebee !important;
+}
+
+.warning {
+	color: #721c24;
+	background-color: #f8d7da;
+	margin: 20px 0;
+	padding: 15px;
+	border-radius: 5px;
+	border: 1px solid #f5c6cb;
+}
+
+.disclaimer {
+	color: #0c5460;
+	background-color: #d1ecf1;
+	margin: 20px 0;
+	padding: 15px;
+	border-radius: 5px;
+	border: 1px solid #bee5eb;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.2);
+	margin-right: 5px;
+}
+
+.course-name {
+	font-weight: bold;
+}
+
+.instructor {
+	font-style: italic;
+}
+
+.domain-badge,
+.semester-badge {
+	display: inline-block;
+	padding: 3px 8px;
+	border-radius: 12px;
+	font-size: 0.8em;
+	font-weight: bold;
+}
+
+.FM .domain-badge {
+	background-color: #3498db;
+	color: white;
+}
+
+.PI .domain-badge {
+	background-color: #e74c3c;
+	color: white;
+}
+
+.semester-badge {
+	background-color: #2ecc71;
+	color: white;
+}
+
+.semester-badge {
+	color: #333;
+	font-weight: bold;
+}
+
+.semester-WiSe-24-25 {
+	background-color: #a8e6cf;
+}
+
+.semester-SoSe-25 {
+	background-color: #ffd3b6;
+}
+
+.semester-WiSe-25-26 {
+	background-color: #ffaaa5;
+}
+
+.copyright {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background-color: #f9f9f9;
+	padding: 10px 0;
+	text-align: left;
+	padding-left: 20px;
+	font-size: 0.9em;
+	color: #777;
+	box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* ... existing styles ... */
+
+.schedule .lecture {
+	background-color: #e6f3ff;
+}
+
+.schedule .tutorial {
+	background-color: #fff0e6;
+}
+
+.schedule td {
+	position: relative;
+	padding: 10px;
+}
+
+.course-name {
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+.course-type {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+
+.type-badge {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 20px;
+	font-size: 12px;
+	font-weight: bold;
+	color: white;
+}
+
+.lecture-badge {
+	background-color: #3498db;
+}
+
+.tutorial-badge {
+	background-color: #e74c3c;
 }
