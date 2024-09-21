@@ -108,7 +108,7 @@ input[type="checkbox"] {
 }
 
 .course-time {
-	max-width: 5vw;
+	/* max-width: 5vw; */
 }
 
 .instructor {
@@ -211,7 +211,7 @@ input[type="checkbox"] {
 	border-radius: 3px;
 	margin-left: 5px;
 	vertical-align: middle;
-  }
+}
 
 .mobile-schedule {
 	display: none;
@@ -289,6 +289,11 @@ input[type="checkbox"] {
 	.mobile-schedule {
 		display: block;
 	}
+}
+
+.spacer {
+	margin-right: 10px;
+	text-align: center;
 }
 
 @media screen and (max-width: 600px) {

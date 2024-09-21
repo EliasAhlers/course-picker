@@ -14,7 +14,7 @@ const App: React.FC = () => {
 	const [showBachelorCourses, setShowBachelorCourses] = useState<boolean>(() => {
 		const savedSetting = localStorage.getItem('showBachelorCourses');
 		return savedSetting ? JSON.parse(savedSetting) : false;
-	  });
+	});
 
 
 	useEffect(() => {
@@ -28,7 +28,7 @@ const App: React.FC = () => {
 
 	useEffect(() => {
 		localStorage.setItem('showBachelorCourses', JSON.stringify(showBachelorCourses));
-	  }, [showBachelorCourses]);
+	}, [showBachelorCourses]);
 
 	useEffect(() => {
 		const newConflicts = detectConflicts(selectedCourses);
@@ -55,7 +55,7 @@ const App: React.FC = () => {
 		for (let i = 0; i < courses.length; i++) {
 			const localConflicts = getConflicts(courses[i]);
 			if (localConflicts.ids.length > 0) {
-				if(!conflicts.some(conflict => conflict.ids.includes(localConflicts.ids[0]))){
+				if (!conflicts.some(conflict => conflict.ids.includes(localConflicts.ids[0]))) {
 					conflicts.push(localConflicts);
 				}
 			}
@@ -103,9 +103,9 @@ const App: React.FC = () => {
 		if (course.semester !== selectedSemester) return getEmptyConflict();
 
 		// check lecture times
-		for(const otherCourse of selectedCourses) {
-			if(otherCourse.id === course.id) continue;
-			if(hasLectureConflict(getTimes(course).lecture, getTimes(otherCourse).lecture)) {
+		for (const otherCourse of selectedCourses) {
+			if (otherCourse.id === course.id) continue;
+			if (hasLectureConflict(getTimes(course).lecture, getTimes(otherCourse).lecture)) {
 				return { ids: [course.id, otherCourse.id], reason: 'Vorlesungen überschneiden sich' };
 			}
 		}
@@ -113,11 +113,11 @@ const App: React.FC = () => {
 		// check tutorial times, only for tutorials of this course
 		const times = getTimes(course);
 		const tutorialConflicts: Conflict = getEmptyConflict();
-		for(const tutorialTimeSlot of times.tutorial) {
-			for(const otherCourse of selectedCourses) {
-				if(otherCourse.id === course.id) continue;
-				if(hasLectureConflict([tutorialTimeSlot], getTimes(otherCourse).lecture)) {
-					if(tutorialConflicts.ids.length == 0) {
+		for (const tutorialTimeSlot of times.tutorial) {
+			for (const otherCourse of selectedCourses) {
+				if (otherCourse.id === course.id) continue;
+				if (hasLectureConflict([tutorialTimeSlot], getTimes(otherCourse).lecture)) {
+					if (tutorialConflicts.ids.length == 0) {
 						tutorialConflicts.ids.push(course.id);
 						tutorialConflicts.ids.push(otherCourse.id);
 					} else {
@@ -127,7 +127,7 @@ const App: React.FC = () => {
 			}
 		}
 
-		if(tutorialConflicts.ids.length == times.tutorial.length+1) {
+		if (tutorialConflicts.ids.length == times.tutorial.length + 1) {
 			tutorialConflicts.reason = 'Übungen überschneiden sich mit Vorlesungen';
 			return tutorialConflicts;
 		}
@@ -258,7 +258,8 @@ const App: React.FC = () => {
 				</div>
 			)}
 
-			<h2>Stundenplan
+			<h2>
+				<span className="spacer">Stundenplan</span>
 				<select
 					value={selectedSemester}
 					onChange={(e) => setSelectedSemester(e.target.value)}
@@ -268,6 +269,11 @@ const App: React.FC = () => {
 					<option value="WiSe 25/26">WiSe 25/26</option>
 				</select>
 			</h2>
+			{selectedSemester != "WiSe 24/25" &&
+				<div className="disclaimer">
+					<b>Hinweis:</b> Für das Semester {selectedSemester} sind noch keine Zeiten vorhanden, daher kann kein Stundenplan angezeigt werden.
+				</div>
+			}
 			{isMobile ? (
 				<div className="mobile-schedule">
 					{Object.keys(groupedScheduleItems).length === 0 ? (
@@ -402,7 +408,7 @@ const App: React.FC = () => {
 										</div>
 									</td>
 									<td data-label="Übung">
-									<div className='course-time' >
+										<div className='course-time' >
 											{course.tutorial || '?'}
 										</div>
 									</td>
