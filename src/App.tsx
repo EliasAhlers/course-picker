@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Course, Conflict, ScheduleItem, TimeSlot } from './types';
+import { Course, Conflict, ScheduleItem, TimeSlot, getEmptyConflict } from './types';
 import './App.css';
 import { courses } from './courses';
 
@@ -47,14 +47,11 @@ const App: React.FC = () => {
 		const conflicts: Conflict[] = [];
 		for (let i = 0; i < courses.length; i++) {
 			const localConflicts = getConflicts(courses[i]);
-			if (localConflicts.length > 0) {
-				conflicts.push(localConflicts);
+			if (localConflicts.ids.length > 0) {
+				if(!conflicts.some(conflict => conflict.ids.includes(localConflicts.ids[0]))){
+					conflicts.push(localConflicts);
+				}
 			}
-			// for (let j = i + 1; j < courses.length; j++) {
-			// 	if (hasTimeConflict(courses[i], courses[j])) {
-			// 		conflicts.push([courses[i].id, courses[j].id]);
-			// 	}
-			// }
 		}
 		return conflicts;
 	};
@@ -95,39 +92,40 @@ const App: React.FC = () => {
 	};
 
 	const getConflicts = (course: Course): Conflict => {
-		if (!course.schedule) return [];
-		if (course.semester !== selectedSemester) return [];
+		if (!course.schedule) return getEmptyConflict();
+		if (course.semester !== selectedSemester) return getEmptyConflict();
 
 		// check lecture times
 		for(const otherCourse of selectedCourses) {
 			if(otherCourse.id === course.id) continue;
 			if(hasLectureConflict(getTimes(course).lecture, getTimes(otherCourse).lecture)) {
-				return [course.id, otherCourse.id];
+				return { ids: [course.id, otherCourse.id], reason: 'Vorlesungen überschneiden sich' };
 			}
 		}
 
 		// check tutorial times, only for tutorials of this course
 		const times = getTimes(course);
-		const tutorialConflicts: Conflict = [];
+		const tutorialConflicts: Conflict = getEmptyConflict();
 		for(const tutorialTimeSlot of times.tutorial) {
 			for(const otherCourse of selectedCourses) {
 				if(otherCourse.id === course.id) continue;
 				if(hasLectureConflict([tutorialTimeSlot], getTimes(otherCourse).lecture)) {
-					if(tutorialConflicts.length == 0) {
-						tutorialConflicts.push(course.id);
-						tutorialConflicts.push(otherCourse.id);
+					if(tutorialConflicts.ids.length == 0) {
+						tutorialConflicts.ids.push(course.id);
+						tutorialConflicts.ids.push(otherCourse.id);
 					} else {
-						tutorialConflicts.push(otherCourse.id);
+						tutorialConflicts.ids.push(otherCourse.id);
 					}
 				}
 			}
 		}
 
-		if(tutorialConflicts.length == times.tutorial.length+1) {
+		if(tutorialConflicts.ids.length == times.tutorial.length+1) {
+			tutorialConflicts.reason = 'Übungen überschneiden sich mit Vorlesungen';
 			return tutorialConflicts;
 		}
 
-		return [];
+		return getEmptyConflict();
 	};
 
 	const totalCP = selectedCourses.reduce((sum, course) => sum + course.cp, 0);
@@ -139,7 +137,7 @@ const App: React.FC = () => {
 	};
 
 	const isConflict = (courseId: number) => {
-		return conflicts.some(conflict => conflict.includes(courseId));
+		return conflicts.some(conflict => conflict.ids.includes(courseId));
 	};
 
 	const getSemesterClass = (semester: string): string => {
@@ -220,13 +218,14 @@ const App: React.FC = () => {
 					<b>Achtung:</b> Es gibt Zeitüberschneidungen zwischen ausgewählten Kursen!
 					<ul>
 						{conflicts.map(conflict => (
-							<li key={conflict.join('-')}>
-								{conflict.map((id, index) => (
+							<li key={conflict.ids.join('-')}>
+								{conflict.ids.map((id, index) => (
 									<span key={id}>
 										{courses.find(c => c.id === id)?.name}
-										{index < conflict.length - 1 && (index === conflict.length - 2 ? ' und ' : ', ')}
+										{index < conflict.ids.length - 1 && (index === conflict.ids.length - 2 ? ' und ' : ', ')}
 									</span>
 								))}
+								{" (" + conflict.reason + ")"}
 							</li>
 						))}
 					</ul>
@@ -237,9 +236,15 @@ const App: React.FC = () => {
 				<div className="warning">
 					<b>Achtung:</b> Du hast genug CP für alle Vorlesungen, aber nicht genug CP für Formale Methoden und/oder Praktische Informatik!
 					<ul>
-						{conflicts.map(([id1, id2]) => (
-							<li key={`${id1}-${id2}`}>
-								{courses.find(c => c.id === id1)?.name} und {courses.find(c => c.id === id2)?.name}
+						{conflicts.map(conflict => (
+							<li key={conflict.ids.join('-')}>
+								{conflict.ids.map((id, index) => (
+									<span key={id}>
+										{courses.find(c => c.id === id)?.name}
+										{index < conflict.ids.length - 1 && (index === conflict.ids.length - 2 ? ' und ' : ', ')}
+									</span>
+								))}
+								{" (" + conflict.reason + ")"}
 							</li>
 						))}
 					</ul>

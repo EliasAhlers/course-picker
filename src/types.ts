@@ -24,4 +24,13 @@ export interface TimeSlot {
     end: number;
 }
 
-export type Conflict = number[]; // Array of course IDs
+// export type Conflict = number[]; // Array of course IDs
+
+export interface Conflict {
+    ids: number[];
+    reason: string;
+}
+
+export const getEmptyConflict = (): Conflict => {
+    return { ids: [], reason: '' };
+}
