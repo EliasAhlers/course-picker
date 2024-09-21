@@ -1,50 +1,28 @@
-# React + TypeScript + Vite
+# Vorlesungsauswahl-Tool für Kerninformatik
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+This React-based web application helps students at the University of Münster select courses from the "Kerninformatik" area. It provides a visual schedule, tracks credit points and alerts students to potential time conflicts between courses.
 
-Currently, two official plugins are available:
+## Features
+- Course selection interface
+- Visual schedule display
+- Credit point tracking for total CP, Formal Methods, and Practical Computer Science
+- Conflict detection for overlapping course times
+- Local storage of selected courses
+- Responsive design for mobile and desktop use
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Development
+This project is built using React and TypeScript. To run it locally:
 
-## Expanding the ESLint configuration
+1. Run `npm install` to install dependencies
+2. Use `npm start` to run the app
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Disclaimer
+This tool is for planning purposes only. The accuracy of course data is not guaranteed, and users should verify all information with official university sources.
 
-- Configure the top-level `parserOptions` property like this:
+## License
+The code in this repo is licensed under the MIT License.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+To view a copy of this license, visit: https://opensource.org/licenses/MIT
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+Elias Ahlers, 2024
