@@ -7,6 +7,7 @@ export interface Course {
     cp: number;
     schedule?: string;
     tutorial?: string;
+    bachelor?: boolean;
 }
 
 export interface ScheduleItem {

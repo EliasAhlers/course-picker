@@ -11,6 +11,7 @@ const App: React.FC = () => {
 	const [conflicts, setConflicts] = useState<Conflict[]>([]);
 	const [selectedSemester, setSelectedSemester] = useState<string>("WiSe 24/25");
 	const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
+	const [showBachelorCourses, setShowBachelorCourses] = useState<boolean>(false);
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -274,6 +275,16 @@ const App: React.FC = () => {
 			)}
 
 			<h2>Verfügbare Vorlesungen</h2>
+			<div className="controls">
+				<label>
+					<input
+						type="checkbox"
+						checked={showBachelorCourses}
+						onChange={(e) => setShowBachelorCourses(e.target.checked)}
+					/>
+					Bachelor-Vorlesungen anzeigen
+				</label>
+			</div>
 			<div className="table-container">
 				<table className="responsive-table">
 					<thead>
@@ -289,35 +300,37 @@ const App: React.FC = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{courses.map(course => (
-							<tr key={course.id} className={`
-      ${course.domain} 
-      ${isDuplicateSelected(course) ? 'duplicate' : ''}
-      ${isConflict(course.id) ? 'conflict' : ''}
-    `}>
-								<td data-label="Auswahl">
-									<input
-										type="checkbox"
-										checked={selectedCourses.some(c => c.id === course.id)}
-										onChange={() => handleCourseToggle(course)}
-										disabled={isDuplicateSelected(course)}
-									/>
-								</td>
-								<td data-label="Name">
-									<div className="course-name">{course.name}</div>
-								</td>
-								<td data-label="Dozent" className="instructor">{course.instructor}</td>
-								<td data-label="Bereich"><span className="domain-badge">{course.domain}</span></td>
-								<td data-label="Semester">
-									<span className={`semester-badge ${getSemesterClass(course.semester)}`}>
-										{course.semester}
-									</span>
-								</td>
-								<td data-label="CP">{course.cp}</td>
-								<td data-label="Zeit">{course.schedule || '?'}</td>
-								<td data-label="Übung">{course.tutorial || '?'}</td>
-							</tr>
-						))}
+						{courses
+							.filter(course => showBachelorCourses || !course.bachelor)
+							.map(course => (
+								<tr key={course.id} className={`
+									${course.domain} 
+									${isDuplicateSelected(course) ? 'duplicate' : ''}
+									${isConflict(course.id) ? 'conflict' : ''}
+								  `}>
+									<td data-label="Auswahl">
+										<input
+											type="checkbox"
+											checked={selectedCourses.some(c => c.id === course.id)}
+											onChange={() => handleCourseToggle(course)}
+											disabled={isDuplicateSelected(course)}
+										/>
+									</td>
+									<td data-label="Name">
+										<div className="course-name">{course.name}</div>
+									</td>
+									<td data-label="Dozent" className="instructor">{course.instructor}</td>
+									<td data-label="Bereich"><span className="domain-badge">{course.domain}</span></td>
+									<td data-label="Semester">
+										<span className={`semester-badge ${getSemesterClass(course.semester)}`}>
+											{course.semester}
+										</span>
+									</td>
+									<td data-label="CP">{course.cp}</td>
+									<td data-label="Zeit">{course.schedule || '?'}</td>
+									<td data-label="Übung">{course.tutorial || '?'}</td>
+								</tr>
+							))}
 					</tbody>
 				</table>
 			</div>
