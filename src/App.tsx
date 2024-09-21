@@ -143,6 +143,8 @@ const App: React.FC = () => {
 		<div className="App">
 			<h1>Vorlesungsauswahl-Tool für den Bereich "Kerninformatik"</h1>
 
+			Dieses Tool ermöglicht die Auswahl von Vorlesungen aus dem Bereich "Kerninformatik" im Informatik Master der Universität Münster und zeigt den Stundenplan sowie die gesammelten CP an. Zudem werden die gewählten Vorlesungen überprüft und wenn es Überschneidungen bei diesen oder ihren Übungen gibt, wird darauf hingewiesen.
+
 			<div className="disclaimer">
 				<b>Hinweis:</b> Ich übernehme keine Verantwortung für die Richtigkeit der Daten oder eventuelle Fehler! Besonders bei den CP bin ich mir nicht sicher, ob sie korrekt sind.
 				<br></br>
@@ -154,7 +156,13 @@ const App: React.FC = () => {
 				<b>Hinweis:</b> Aktuell sind noch nicht alle Daten vorhanden, es fehlen noch einige Zeiten für das WiSe 24/25! Sobald ich diese weiß, trage ich sie nach.
 			</div>
 
-			<h2>Fortschritt</h2>
+			{isMobile && (
+				<div className="disclaimer">
+					<b>Hinweis:</b> Obwohl diese Seite für Handys optimiert ist, empfehle ich die Nutzung auf einem größeren Bildschirm, da die Darstellung auf Handys nicht optimal ist.
+				</div>
+			)}
+
+			<h2>Bedingungen</h2>
 			<ProgressBar label="Gesamte CP" current={totalCP} max={51} />
 			<ProgressBar label="Formale Methoden CP" current={fmCP} max={15} />
 			<ProgressBar label="Praktische Informatik CP" current={piCP} max={15} />
@@ -162,6 +170,19 @@ const App: React.FC = () => {
 			{conflicts.length > 0 && (
 				<div className="warning">
 					<b>Achtung:</b> Es gibt Zeitüberschneidungen zwischen ausgewählten Kursen!
+					<ul>
+						{conflicts.map(([id1, id2]) => (
+							<li key={`${id1}-${id2}`}>
+								{courses.find(c => c.id === id1)?.name} und {courses.find(c => c.id === id2)?.name}
+							</li>
+						))}
+					</ul>
+				</div>
+			)}
+
+			{totalCP > 51 && (fmCP < 15 || piCP < 15) && (
+				<div className="warning">
+					<b>Achtung:</b> Du hast genug CP für alle Vorlesungen, aber nicht genug CP für Formale Methoden und/oder Praktische Informatik!
 					<ul>
 						{conflicts.map(([id1, id2]) => (
 							<li key={`${id1}-${id2}`}>
@@ -184,24 +205,28 @@ const App: React.FC = () => {
 			</h2>
 			{isMobile ? (
 				<div className="mobile-schedule">
-					{Object.entries(groupedScheduleItems).map(([day, items]) => (
-						<div key={day} className="mobile-schedule-day-group">
-							<h3>{day}</h3>
-							{items.map((item, index) => (
-								<div key={index} className={`mobile-schedule-item ${item.isLecture ? 'lecture' : 'tutorial'}`}>
-									<div className="mobile-schedule-time">{`${item.start}:00 - ${item.end}:00`}</div>
-									<div className="mobile-schedule-course">
-										<div className="course-name">{item.course.name}</div>
-										<div className="course-type">
-											<span className={`type-badge ${item.isLecture ? 'lecture-badge' : 'tutorial-badge'}`}>
-												{item.isLecture ? 'V' : 'Ü'}
-											</span>
+					{Object.keys(groupedScheduleItems).length === 0 ? (
+						<p>Keine Kurse ausgewählt.</p>
+					) : (
+						Object.entries(groupedScheduleItems).map(([day, items]) => (
+							<div key={day} className="mobile-schedule-day-group">
+								<h3>{day}</h3>
+								{items.map((item, index) => (
+									<div key={index} className={`mobile-schedule-item ${item.isLecture ? 'lecture' : 'tutorial'}`}>
+										<div className="mobile-schedule-time">{`${item.start}:00 - ${item.end}:00`}</div>
+										<div className="mobile-schedule-course">
+											<div className="course-name">{item.course.name}</div>
+											<div className="course-type">
+												<span className={`type-badge ${item.isLecture ? 'lecture-badge' : 'tutorial-badge'}`}>
+													{item.isLecture ? 'V' : 'Ü'}
+												</span>
+											</div>
 										</div>
 									</div>
-								</div>
-							))}
-						</div>
-					))}
+								))}
+							</div>
+						))
+					)}
 				</div>
 			) : (
 				<table className="schedule">
@@ -216,28 +241,34 @@ const App: React.FC = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{uniqueTimes.map((time) => (
-							<tr key={time}>
-								<td>{`${time}:00 - ${time + 2}:00`}</td>
-								{['Mo', 'Di', 'Mi', 'Do', 'Fr'].map(day => {
-									const item = scheduleItems.find(i => i.day === day && i.start === time);
-									return (
-										<td key={day} className={item ? (item.isLecture ? 'lecture' : 'tutorial') : ''}>
-											{item && (
-												<>
-													<div className="course-name">{item.course.name}</div>
-													<div className="course-type">
-														<span className={`type-badge ${item.isLecture ? 'lecture-badge' : 'tutorial-badge'}`}>
-															{item.isLecture ? 'V' : 'Ü'}
-														</span>
-													</div>
-												</>
-											)}
-										</td>
-									);
-								})}
+						{uniqueTimes.length === 0 ? (
+							<tr>
+								<td>Keine Kurse ausgewählt.</td>
 							</tr>
-						))}
+						) : (
+							uniqueTimes.map((time) => (
+								<tr key={time}>
+									<td>{`${time}:00 - ${time + 2}:00`}</td>
+									{['Mo', 'Di', 'Mi', 'Do', 'Fr'].map(day => {
+										const item = scheduleItems.find(i => i.day === day && i.start === time);
+										return (
+											<td key={day} className={item ? (item.isLecture ? 'lecture' : 'tutorial') : ''}>
+												{item && (
+													<>
+														<div className="course-name">{item.course.name}</div>
+														<div className="course-type">
+															<span className={`type-badge ${item.isLecture ? 'lecture-badge' : 'tutorial-badge'}`}>
+																{item.isLecture ? 'V' : 'Ü'}
+															</span>
+														</div>
+													</>
+												)}
+											</td>
+										);
+									})}
+								</tr>
+							))
+						)}
 					</tbody>
 				</table>
 			)}
