@@ -30,6 +30,16 @@ const App: React.FC = () => {
 	});
 	const [conflicts, setConflicts] = useState<Conflict[]>([]);
 	const [selectedSemester, setSelectedSemester] = useState<string>("WiSe 24/25");
+	const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
 
 	useEffect(() => {
 		const newConflicts = detectConflicts(selectedCourses);
@@ -134,11 +144,20 @@ const App: React.FC = () => {
 		});
 	};
 
+	const groupScheduleItemsByDay = (items: ScheduleItem[]): { [key: string]: ScheduleItem[] } => {
+		return items.reduce((acc, item) => {
+			if (!acc[item.day]) {
+				acc[item.day] = [];
+			}
+			acc[item.day].push(item);
+			return acc;
+		}, {} as { [key: string]: ScheduleItem[] });
+	};
+
 	const scheduleItems = generateSchedule(selectedCourses, selectedSemester);
+	const groupedScheduleItems = groupScheduleItemsByDay(scheduleItems);
 
 	const uniqueTimes = Array.from(new Set(scheduleItems.map(item => item.start))).sort((a, b) => a - b);
-
-
 
 	return (
 		<div className="App">
@@ -150,10 +169,6 @@ const App: React.FC = () => {
 				<br></br>
 				Alle Daten bleiben lokal im Browser gespeichert und werden nicht an einen Server gesendet. Beim Löschen des Browserspeichers für diese Seite gehen alle Daten verloren!
 			</div>
-
-			{/* <div className="disclaimer">
-				<b>Hinweis:</b> Alle Daten bleiben lokal im Browser gespeichert und werden nicht an einen Server gesendet. Beim Löschen des Browserspeichers für diese Seite gehen alle Daten verloren!
-			</div> */}
 
 			<div className="disclaimer">
 				<b>Hinweis:</b> Aktuell sind noch nicht alle Daten vorhanden, es fehlen noch einige Zeiten für das WiSe 24/25! Sobald ich diese weiß, trage ich sie nach.
@@ -187,87 +202,114 @@ const App: React.FC = () => {
 					<option value="WiSe 25/26">WiSe 25/26</option>
 				</select>
 			</h2>
-			<table className="schedule">
-				<thead>
-					<tr>
-						<th>Zeit</th>
-						<th>Montag</th>
-						<th>Dienstag</th>
-						<th>Mittwoch</th>
-						<th>Donnerstag</th>
-						<th>Freitag</th>
-					</tr>
-				</thead>
-				<tbody>
-					{uniqueTimes.map((time) => (
-						<tr key={time}>
-							<td>{`${time}:00 - ${time + 2}:00`}</td>
-							{['Mo', 'Di', 'Mi', 'Do', 'Fr'].map(day => {
-								const item = scheduleItems.find(i => i.day === day && i.start === time);
-								return (
-									<td key={day} className={item ? (item.isLecture ? 'lecture' : 'tutorial') : ''}>
-										{item && (
-											<>
-												<div className="course-name">{item.course.name}</div>
-												<div className="course-type">
-													<span className={`type-badge ${item.isLecture ? 'lecture-badge' : 'tutorial-badge'}`}>
-														{item.isLecture ? 'V' : 'Ü'}
-													</span>
-												</div>
-											</>
-										)}
-									</td>
-								);
-							})}
-						</tr>
+			{isMobile ? (
+				<div className="mobile-schedule">
+					{Object.entries(groupedScheduleItems).map(([day, items]) => (
+						<div key={day} className="mobile-schedule-day-group">
+							<h3>{day}</h3>
+							{items.map((item, index) => (
+								<div key={index} className={`mobile-schedule-item ${item.isLecture ? 'lecture' : 'tutorial'}`}>
+									<div className="mobile-schedule-time">{`${item.start}:00 - ${item.end}:00`}</div>
+									<div className="mobile-schedule-course">
+										<div className="course-name">{item.course.name}</div>
+										<div className="course-type">
+											<span className={`type-badge ${item.isLecture ? 'lecture-badge' : 'tutorial-badge'}`}>
+												{item.isLecture ? 'V' : 'Ü'}
+											</span>
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
 					))}
-				</tbody>
-			</table>
+				</div>
+			) : (
+				<table className="schedule">
+					<thead>
+						<tr>
+							<th>Zeit</th>
+							<th>Montag</th>
+							<th>Dienstag</th>
+							<th>Mittwoch</th>
+							<th>Donnerstag</th>
+							<th>Freitag</th>
+						</tr>
+					</thead>
+					<tbody>
+						{uniqueTimes.map((time) => (
+							<tr key={time}>
+								<td>{`${time}:00 - ${time + 2}:00`}</td>
+								{['Mo', 'Di', 'Mi', 'Do', 'Fr'].map(day => {
+									const item = scheduleItems.find(i => i.day === day && i.start === time);
+									return (
+										<td key={day} className={item ? (item.isLecture ? 'lecture' : 'tutorial') : ''}>
+											{item && (
+												<>
+													<div className="course-name">{item.course.name}</div>
+													<div className="course-type">
+														<span className={`type-badge ${item.isLecture ? 'lecture-badge' : 'tutorial-badge'}`}>
+															{item.isLecture ? 'V' : 'Ü'}
+														</span>
+													</div>
+												</>
+											)}
+										</td>
+									);
+								})}
+							</tr>
+						))}
+					</tbody>
+				</table>
+			)}
 
 			<h2>Verfügbare Vorlesungen</h2>
-			<table>
-				<thead>
-					<tr>
-						<th>Auswahl</th>
-						<th>Name</th>
-						<th>Dozent</th>
-						<th>Bereich</th>
-						<th>Semester</th>
-						<th>CP</th>
-						<th>Zeit</th>
-						<th>Übung</th>
-					</tr>
-				</thead>
-				<tbody>
-					{courses.map(course => (
-						<tr key={course.id} className={`
+			<div className="table-container">
+				<table className="responsive-table">
+					<thead>
+						<tr>
+							<th>Auswahl</th>
+							<th>Name</th>
+							<th>Dozent</th>
+							<th>Bereich</th>
+							<th>Semester</th>
+							<th>CP</th>
+							<th>Zeit</th>
+							<th>Übung</th>
+						</tr>
+					</thead>
+					<tbody>
+						{courses.map(course => (
+							<tr key={course.id} className={`
       ${course.domain} 
       ${isDuplicateSelected(course) ? 'duplicate' : ''}
       ${isConflict(course.id) ? 'conflict' : ''}
     `}>
-							<td>
-								<input
-									type="checkbox"
-									checked={selectedCourses.some(c => c.id === course.id)}
-									onChange={() => handleCourseToggle(course)}
-									disabled={isDuplicateSelected(course)}
-								/>
-							</td>
-							<td className="course-name">{course.name}</td>
-							<td className="instructor">{course.instructor}</td>
-							<td><span className="domain-badge">{course.domain}</span></td>
-							<td>
-								<span className={`semester-badge ${getSemesterClass(course.semester)}`}>
-									{course.semester}
-								</span>
-							</td>
-							<td>{course.cp}</td>
-							<td>{course.schedule || '?'}</td>
-							<td>{course.tutorial || '?'}</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
+								<td data-label="Auswahl">
+									<input
+										type="checkbox"
+										checked={selectedCourses.some(c => c.id === course.id)}
+										onChange={() => handleCourseToggle(course)}
+										disabled={isDuplicateSelected(course)}
+									/>
+								</td>
+								<td data-label="Name">
+									<div className="course-name">{course.name}</div>
+								</td>
+								<td data-label="Dozent" className="instructor">{course.instructor}</td>
+								<td data-label="Bereich"><span className="domain-badge">{course.domain}</span></td>
+								<td data-label="Semester">
+									<span className={`semester-badge ${getSemesterClass(course.semester)}`}>
+										{course.semester}
+									</span>
+								</td>
+								<td data-label="CP">{course.cp}</td>
+								<td data-label="Zeit">{course.schedule || '?'}</td>
+								<td data-label="Übung">{course.tutorial || '?'}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
 
 			<footer className="copyright">
 				2024 Elias Ahlers

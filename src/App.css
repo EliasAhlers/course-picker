@@ -1,10 +1,9 @@
 .App {
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	line-height: 1.6;
-	margin: 0;
-	padding: 40px;
-	max-width: 1200px;
 	margin: 0 auto;
+	padding: 20px;
+	max-width: 1200px;
 	background-color: #f9f9f9;
 }
 
@@ -15,12 +14,17 @@ h2 {
 }
 
 h1 {
-	font-size: 2.5em;
+	font-size: 2em;
 	border-bottom: 2px solid #3498db;
 	padding-bottom: 10px;
 }
 
-table {
+.table-container {
+	overflow-x: auto;
+}
+
+table,
+.responsive-table {
 	border-collapse: separate;
 	border-spacing: 0;
 	width: 100%;
@@ -64,14 +68,6 @@ th {
 	margin-left: 15px;
 }
 
-/* .FM {
-  background-color: #e8f4f8;
-}
-
-.PI {
-  background-color: #f8e8e8;
-} */
-
 .duplicate {
 	opacity: 0.6;
 	background-color: #f0f0f0 !important;
@@ -82,21 +78,23 @@ th {
 	background-color: #ffebee !important;
 }
 
-.warning {
-	color: #721c24;
-	background-color: #f8d7da;
+/* Warning and Disclaimer */
+.warning,
+.disclaimer {
 	margin: 20px 0;
 	padding: 15px;
 	border-radius: 5px;
+}
+
+.warning {
+	color: #721c24;
+	background-color: #f8d7da;
 	border: 1px solid #f5c6cb;
 }
 
 .disclaimer {
 	color: #0c5460;
 	background-color: #d1ecf1;
-	margin: 20px 0;
-	padding: 15px;
-	border-radius: 5px;
 	border: 1px solid #bee5eb;
 }
 
@@ -107,6 +105,7 @@ input[type="checkbox"] {
 
 .course-name {
 	font-weight: bold;
+	max-width: 55vw;
 }
 
 .instructor {
@@ -137,11 +136,6 @@ input[type="checkbox"] {
 	color: white;
 }
 
-.semester-badge {
-	color: #333;
-	font-weight: bold;
-}
-
 .semester-WiSe-24-25 {
 	background-color: #a8e6cf;
 }
@@ -155,20 +149,15 @@ input[type="checkbox"] {
 }
 
 .copyright {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	background-color: #f9f9f9;
+	flex-shrink: 0;
+	background-color: #f0f0f0;
 	padding: 10px 0;
-	text-align: left;
-	padding-left: 20px;
+	text-align: center;
 	font-size: 0.9em;
 	color: #777;
-	box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+	width: 100%;
+	border-top: 1px solid #ddd;
 }
-
-/* ... existing styles ... */
 
 .schedule .lecture {
 	background-color: #e6f3ff;
@@ -183,15 +172,10 @@ input[type="checkbox"] {
 	padding: 10px;
 }
 
-.course-name {
-	font-weight: bold;
-	margin-bottom: 5px;
-}
-
 .course-type {
-	position: absolute;
-	top: 5px;
-	right: 5px;
+	display: inline-block;
+	margin-left: 10px;
+	vertical-align: middle;
 }
 
 .type-badge {
@@ -204,6 +188,7 @@ input[type="checkbox"] {
 	font-size: 12px;
 	font-weight: bold;
 	color: white;
+	vertical-align: middle;
 }
 
 .lecture-badge {
@@ -212,4 +197,193 @@ input[type="checkbox"] {
 
 .tutorial-badge {
 	background-color: #e74c3c;
+}
+
+.mobile-schedule {
+	display: none;
+}
+
+.mobile-schedule-day-group {
+	margin-bottom: 20px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.mobile-schedule-day-group h3 {
+	margin: 0;
+	padding: 10px;
+	background-color: #f0f0f0;
+	border-bottom: 1px solid #ddd;
+}
+
+.mobile-schedule-item {
+	padding: 10px;
+	border-bottom: 1px solid #eee;
+}
+
+.mobile-schedule-item:last-child {
+	border-bottom: none;
+}
+
+.mobile-schedule-time {
+	font-size: 0.9em;
+	color: #666;
+	margin-bottom: 5px;
+}
+
+.mobile-schedule-course {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.mobile-schedule .course-name {
+	flex-grow: 1;
+}
+
+.mobile-schedule .course-type {
+	margin-left: 10px;
+}
+
+@media (max-width: 768px) {
+	.App {
+		padding: 10px;
+	}
+
+	h1 {
+		font-size: 1.5em;
+	}
+
+	h2 {
+		font-size: 1.2em;
+	}
+
+	table {
+		font-size: 0.9em;
+	}
+
+	th,
+	td {
+		padding: 8px;
+	}
+
+	.schedule {
+		display: none;
+	}
+
+	.mobile-schedule {
+		display: block;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.responsive-table thead {
+		display: none;
+	}
+
+	.responsive-table,
+	.responsive-table tbody,
+	.responsive-table tr,
+	.responsive-table td {
+		display: block;
+		width: 99%;
+	}
+
+	.responsive-table tr {
+		margin-bottom: 20px;
+		border: 1px solid #ddd;
+		border-radius: 8px;
+		overflow: hidden;
+		background-color: #f9f9f9;
+		position: relative;
+	}
+
+	.responsive-table td {
+		text-align: left;
+		padding: 12px 15px 12px 120px;
+		position: relative;
+		border-bottom: 1px solid #eee;
+		min-height: 44px;
+	}
+
+	.responsive-table td:last-child {
+		border-bottom: none;
+	}
+
+	.responsive-table td::before {
+		content: attr(data-label);
+		position: absolute;
+		left: 15px;
+		width: 100px;
+		padding-right: 10px;
+		white-space: nowrap;
+		font-weight: bold;
+		text-transform: uppercase;
+		font-size: 0.85em;
+		color: #555;
+	}
+
+	.responsive-table td:first-child {
+		background-color: #f0f0f0;
+		padding: 15px 50px 15px 15px;
+		text-align: left;
+		min-height: 50px;
+		position: relative;
+	}
+
+	.responsive-table td:first-child::before {
+		content: "Auswahl";
+		display: inline-block;
+		position: static;
+		font-weight: bold;
+		text-transform: uppercase;
+		font-size: 0.85em;
+		color: #555;
+		margin-right: 10px;
+	}
+
+	.responsive-table input[type="checkbox"] {
+		position: absolute;
+		left: 100px;
+		width: 20px;
+		height: 20px;
+	}
+
+	.responsive-table .course-name {
+		font-size: 1.1em;
+		font-weight: bold;
+		margin-bottom: 5px;
+	}
+
+	.responsive-table .instructor {
+		font-style: italic;
+		color: #666;
+	}
+
+	.responsive-table .domain-badge,
+	.responsive-table .semester-badge {
+		display: inline-block;
+		margin-top: 5px;
+	}
+
+	.responsive-table .course-type {
+		display: inline-block;
+		margin-left: 10px;
+		vertical-align: middle;
+	}
+
+	.responsive-table .type-badge {
+		display: inline-block;
+		vertical-align: middle;
+		margin-top: -2px;
+	}
+
+	.responsive-table .course-name {
+		display: inline-block;
+		font-size: 1.1em;
+		font-weight: bold;
+		margin-right: 10px;
+		vertical-align: middle;
+	}
 }
