@@ -202,6 +202,17 @@ input[type="checkbox"] {
 	background-color: #e74c3c;
 }
 
+.bachelor-badge {
+	display: inline-block;
+	background-color: #ff9800;
+	color: white;
+	font-size: 0.8em;
+	padding: 2px 5px;
+	border-radius: 3px;
+	margin-left: 5px;
+	vertical-align: middle;
+  }
+
 .mobile-schedule {
 	display: none;
 }

@@ -11,7 +11,10 @@ const App: React.FC = () => {
 	const [conflicts, setConflicts] = useState<Conflict[]>([]);
 	const [selectedSemester, setSelectedSemester] = useState<string>("WiSe 24/25");
 	const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
-	const [showBachelorCourses, setShowBachelorCourses] = useState<boolean>(false);
+	const [showBachelorCourses, setShowBachelorCourses] = useState<boolean>(() => {
+		const savedSetting = localStorage.getItem('showBachelorCourses');
+		return savedSetting ? JSON.parse(savedSetting) : false;
+	  });
 
 
 	useEffect(() => {
@@ -22,6 +25,10 @@ const App: React.FC = () => {
 		window.addEventListener('resize', handleResize);
 		return () => window.removeEventListener('resize', handleResize);
 	}, []);
+
+	useEffect(() => {
+		localStorage.setItem('showBachelorCourses', JSON.stringify(showBachelorCourses));
+	  }, [showBachelorCourses]);
 
 	useEffect(() => {
 		const newConflicts = detectConflicts(selectedCourses);
@@ -342,6 +349,11 @@ const App: React.FC = () => {
 					Bachelor-Vorlesungen anzeigen
 				</label>
 			</div>
+			{showBachelorCourses &&
+				<div className="disclaimer">
+					<b>Hinweis:</b> Bachelorkurse werden nach §8 Absatz 3 der Prüfungsordnung nur auf Antrag anerkannt. Bitte kläre die Anerkennung mit dem Prüfungsamt ab.
+				</div>
+			}
 			<div className="table-container">
 				<table className="responsive-table">
 					<thead>
@@ -374,7 +386,7 @@ const App: React.FC = () => {
 										/>
 									</td>
 									<td data-label="Name">
-										<div className="course-name">{course.name}</div>
+										<div className="course-name">{course.name}{course.bachelor && <span className="bachelor-badge">Bachelor</span>}</div>
 									</td>
 									<td data-label="Dozent" className="instructor">{course.instructor}</td>
 									<td data-label="Bereich"><span className="domain-badge">{course.domain}</span></td>
