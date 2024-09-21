@@ -7,7 +7,7 @@ const courses: Course[] = [
 	{ id: 2, name: "Visualisierung", instructor: "Linsen", domain: "PI", semester: "WiSe 24/25", cp: 9, schedule: "Di 10-12, Fr 10-12", tutorial: "Mi 10-12" },
 	{ id: 3, name: "Computer Vision", instructor: "Jiang", domain: "PI", semester: "WiSe 24/25", cp: 9, schedule: "Mo 10-12, Do 10-12" },
 	{ id: 4, name: "Deep Reinforcement Learning", instructor: "Schilling", domain: "PI", semester: "WiSe 24/25", cp: 6, schedule: "Di 10-12, Fr 10-12", tutorial: "Mi 10-12" },
-	{ id: 5, name: "Verteilte Systeme", instructor: "Gorlatch", domain: "PI", semester: "WiSe 24/25", cp: 6, schedule: "Di 16-18, Mi 16-18" },
+	{ id: 5, name: "Verteilte Systeme", instructor: "Gorlatch", domain: "PI", semester: "WiSe 24/25", cp: 6, schedule: "Di 16-18", tutorial: "Mi 16-18" },
 	{ id: 6, name: "Algorithmische Geometrie", instructor: "Varenhold", domain: "FM", semester: "WiSe 24/25", cp: 9, schedule: "Mo 12-14, Do 12-14", tutorial: "Fr 10-12" },
 	{ id: 7, name: "Modellierung und Analyse von dynamischen Systemen", instructor: "Remke", domain: "FM", semester: "WiSe 24/25", cp: 9, schedule: "Di 12-14, Fr 12-14", tutorial: "Do 12-14" },
 	{ id: 8, name: "Theorie der Programmierung", instructor: "Müller-Olm", domain: "FM", semester: "SoSe 25", cp: 9 },
@@ -59,6 +59,7 @@ const App: React.FC = () => {
 
 	const hasTimeConflict = (course1: Course, course2: Course): boolean => {
 		if (!course1.schedule || !course2.schedule) return false;
+		if (course1.semester !== course2.semester) return false;
 
 		const times1 = getCourseTimes(course1);
 		const times2 = getCourseTimes(course2);
@@ -141,16 +142,22 @@ const App: React.FC = () => {
 
 	return (
 		<div className="App">
-			<h1>Vorlesungsauswahl-Tool für Kerninformatik</h1>
+			<h1>Vorlesungsauswahl-Tool für den Bereich "Kerninformatik"</h1>
 
 			<div className="disclaimer">
-				<b>Hinweis:</b> Ich übernehme keine Verantwortung für die Richtigkeit der Daten oder eventuelle Fehler!
+				<b>Hinweis:</b> Ich übernehme keine Verantwortung für die Richtigkeit der Daten oder eventuelle Fehler! Besonders bei den CP bin ich mir nicht sicher, ob sie korrekt sind.
 				<br></br>
 				<br></br>
 				Alle Daten bleiben lokal im Browser gespeichert und werden nicht an einen Server gesendet. Beim Löschen des Browserspeichers für diese Seite gehen alle Daten verloren!
 			</div>
 
+			{/* <div className="disclaimer">
+				<b>Hinweis:</b> Alle Daten bleiben lokal im Browser gespeichert und werden nicht an einen Server gesendet. Beim Löschen des Browserspeichers für diese Seite gehen alle Daten verloren!
+			</div> */}
 
+			<div className="disclaimer">
+				<b>Hinweis:</b> Aktuell sind noch nicht alle Daten vorhanden, es fehlen noch einige Zeiten für das WiSe 24/25! Sobald ich diese weiß, trage ich sie nach.
+			</div>
 
 			<h2>Fortschritt</h2>
 			<ProgressBar label="Gesamte CP" current={totalCP} max={51} />
@@ -159,7 +166,14 @@ const App: React.FC = () => {
 
 			{conflicts.length > 0 && (
 				<div className="warning">
-					Achtung: Es gibt Zeitüberschneidungen zwischen ausgewählten Kursen!
+					<b>Achtung:</b> Es gibt Zeitüberschneidungen zwischen ausgewählten Kursen!
+					<ul>
+						{conflicts.map(([id1, id2]) => (
+							<li key={`${id1}-${id2}`}>
+								{courses.find(c => c.id === id1)?.name} und {courses.find(c => c.id === id2)?.name}
+							</li>
+						))}
+					</ul>
 				</div>
 			)}
 
