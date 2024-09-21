@@ -346,7 +346,7 @@ const App: React.FC = () => {
 				<table className="responsive-table">
 					<thead>
 						<tr>
-							<th>Auswahl</th>
+							<th></th>
 							<th>Name</th>
 							<th>Dozent</th>
 							<th>Bereich</th>
@@ -384,8 +384,16 @@ const App: React.FC = () => {
 										</span>
 									</td>
 									<td data-label="CP">{course.cp}</td>
-									<td data-label="Zeit">{course.schedule || '?'}</td>
-									<td data-label="Übung">{course.tutorial || '?'}</td>
+									<td data-label="Zeit">
+										<div className='course-time' >
+											{course.schedule || '?'}
+										</div>
+									</td>
+									<td data-label="Übung">
+									<div className='course-time' >
+											{course.tutorial || '?'}
+										</div>
+									</td>
 								</tr>
 							))}
 					</tbody>

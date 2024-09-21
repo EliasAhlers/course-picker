@@ -104,7 +104,11 @@ input[type="checkbox"] {
 
 .course-name {
 	font-weight: bold;
-	max-width: 55vw;
+	max-width: 20vw;
+}
+
+.course-time {
+	max-width: 5vw;
 }
 
 .instructor {

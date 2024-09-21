@@ -6,7 +6,7 @@ export const courses: Course[] = [
 	{ id: 3, name: "Computer Vision", instructor: "Jiang", domain: "PI", semester: "WiSe 24/25", cp: 9, schedule: "Mo 10-12, Do 10-12" },
 	{ id: 4, name: "Deep Reinforcement Learning", instructor: "Schilling", domain: "PI", semester: "WiSe 24/25", cp: 6, schedule: "Di 10-12, Fr 10-12", tutorial: "Mi 10-12" },
 	{ id: 5, name: "Verteilte Systeme", instructor: "Gorlatch", domain: "PI", semester: "WiSe 24/25", cp: 6, schedule: "Di 16-18", tutorial: "Mi 16-18" },
-	{ id: 6, name: "Algorithmische Geometrie", instructor: "Varenhold", domain: "FM", semester: "WiSe 24/25", cp: 9, schedule: "Mo 12-14, Do 12-14", tutorial: "Fr 10-12" },
+	{ id: 6, name: "Algorithmische Geometrie", instructor: "Varenhold", domain: "FM", semester: "WiSe 24/25", cp: 9, schedule: "Mo 12-14, Do 12-14", tutorial: "Fr 10-12, Fr 12-14" },
 	{ id: 7, name: "Modellierung und Analyse von dynamischen Systemen", instructor: "Remke", domain: "FM", semester: "WiSe 24/25", cp: 9, schedule: "Di 12-14, Fr 12-14", tutorial: "Do 12-14" },
 	{ id: 8, name: "Theorie der Programmierung", instructor: "Müller-Olm", domain: "FM", semester: "SoSe 25", cp: 9 },
 	{ id: 9, name: "Aus dem Bereich Algorithmik", instructor: "", domain: "FM", semester: "SoSe 25", cp: 6 },
