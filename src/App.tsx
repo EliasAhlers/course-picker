@@ -1,439 +1,115 @@
 import React, { useState, useEffect } from 'react';
-import { Course, Conflict, ScheduleItem, TimeSlot, getEmptyConflict } from './types';
-import './App.css';
+import { Course } from './types';
 import { courses } from './courses';
+import CourseList from './components/CourseList/CourseList';
+import ProgressBar from './components/ProgressBar/ProgressBar';
+import Schedule from './components/Schedule/Schedule';
+import ConflictWarning from './components/ConflictWarning/ConflictWarning';
+import useLocalStorage from './hooks/useLocalStorage';
+import useConflictDetection from './hooks/useConflictDetection';
+import './App.css';
 
 const App: React.FC = () => {
-	const [selectedCourses, setSelectedCourses] = useState<Course[]>(() => {
-		const savedCourses = localStorage.getItem('selectedCourses');
-		return savedCourses ? JSON.parse(savedCourses) : [];
-	});
-	const [conflicts, setConflicts] = useState<Conflict[]>([]);
-	const [selectedSemester, setSelectedSemester] = useState<string>("WiSe 24/25");
-	const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
-	const [showBachelorCourses, setShowBachelorCourses] = useState<boolean>(() => {
-		const savedSetting = localStorage.getItem('showBachelorCourses');
-		return savedSetting ? JSON.parse(savedSetting) : false;
-	});
+  const [selectedCourses, setSelectedCourses] = useLocalStorage<Course[]>('selectedCourses', []);
+  const [selectedSemester, setSelectedSemester] = useState<string>("WiSe 24/25");
+  const [showBachelorCourses, setShowBachelorCourses] = useLocalStorage<boolean>('showBachelorCourses', false);
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
 
+  const conflicts = useConflictDetection(selectedCourses, selectedSemester);
 
-	useEffect(() => {
-		const handleResize = () => {
-			setIsMobile(window.innerWidth < 768);
-		};
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-		window.addEventListener('resize', handleResize);
-		return () => window.removeEventListener('resize', handleResize);
-	}, []);
+  const handleCourseToggle = (course: Course) => {
+    setSelectedCourses(prev =>
+      prev.some(c => c.id === course.id)
+        ? prev.filter(c => c.id !== course.id)
+        : [...prev, course]
+    );
+  };
 
-	useEffect(() => {
-		localStorage.setItem('showBachelorCourses', JSON.stringify(showBachelorCourses));
-	}, [showBachelorCourses]);
+  const totalCP = selectedCourses.reduce((sum, course) => sum + course.cp, 0);
+  const fmCP = selectedCourses.filter(course => course.domain === "FM").reduce((sum, course) => sum + course.cp, 0);
+  const piCP = selectedCourses.filter(course => course.domain === "PI").reduce((sum, course) => sum + course.cp, 0);
 
-	useEffect(() => {
-		const newConflicts = detectConflicts(selectedCourses);
-		setConflicts(newConflicts);
-		localStorage.setItem('selectedCourses', JSON.stringify(selectedCourses));
-	}, [selectedCourses]);
+  return (
+    <div className="App">
+      <h1>Vorlesungsauswahl-Tool für den Bereich "Kerninformatik"</h1>
+      
+      <div className="disclaimer">
+        <b>Hinweis:</b> Ich übernehme keine Verantwortung für die Richtigkeit der Daten oder eventuelle Fehler! Besonders bei den CP bin ich mir nicht sicher, ob sie korrekt sind.
+        <br /><br />
+        Alle Daten bleiben lokal im Browser gespeichert und werden nicht an einen Server gesendet. Beim Löschen des Browserspeichers für diese Seite gehen alle Daten verloren!
+      </div>
 
-	const handleCourseToggle = (course: Course) => {
-		setSelectedCourses(prev =>
-			prev.some(c => c.id === course.id)
-				? prev.filter(c => c.id !== course.id)
-				: [...prev, course]
-		);
-	};
+      <div className="disclaimer">
+        <b>Hinweis:</b> Aktuell sind noch nicht alle Daten vorhanden, es fehlen noch einige Zeiten für das WiSe 24/25! Sobald ich diese weiß, trage ich sie nach.
+      </div>
 
-	useEffect(() => {
-		const newConflicts = detectConflicts(selectedCourses);
-		setConflicts(newConflicts);
-		localStorage.setItem('selectedCourses', JSON.stringify(selectedCourses));
-	}, [selectedCourses]);
+      {isMobile && (
+        <div className="disclaimer">
+          <b>Hinweis:</b> Obwohl diese Seite für Handys optimiert ist, empfehle ich die Nutzung auf einem größeren Bildschirm, da die Darstellung auf Handys nicht optimal ist.
+        </div>
+      )}
 
-	const detectConflicts = (courses: Course[]): Conflict[] => {
-		const conflicts: Conflict[] = [];
-		for (let i = 0; i < courses.length; i++) {
-			const localConflicts = getConflicts(courses[i]);
-			if (localConflicts.ids.length > 0) {
-				if (!conflicts.some(conflict => conflict.ids.includes(localConflicts.ids[0]))) {
-					conflicts.push(localConflicts);
-				}
-			}
-		}
-		return conflicts;
-	};
+      <h2>Bedingungen</h2>
+      <ProgressBar label="Gesamte CP" current={totalCP} max={51} />
+      <ProgressBar label="Formale Methoden CP" current={fmCP} max={15} />
+      <ProgressBar label="Praktische Informatik CP" current={piCP} max={15} />
 
-	const hasLectureConflict = (times1: TimeSlot[], times2: TimeSlot[]): boolean => {
-		for (const time1 of times1) {
-			for (const time2 of times2) {
-				if (timeOverlap(time1, time2)) return true;
-			}
-		}
-		return false;
-	};
+      <ConflictWarning conflicts={conflicts} courses={courses} />
 
-	const timeOverlap = (time1: TimeSlot, time2: TimeSlot): boolean => {
-		return time1.day === time2.day &&
-			((time1.start <= time2.start && time2.start < time1.end) ||
-				(time2.start <= time1.start && time1.start < time2.end));
-	};
+      <h2>
+        <span className="spacer">Stundenplan</span>
+        <select
+          value={selectedSemester}
+          onChange={(e) => setSelectedSemester(e.target.value)}
+        >
+          <option value="WiSe 24/25">WiSe 24/25</option>
+          <option value="SoSe 25">SoSe 25</option>
+          <option value="WiSe 25/26">WiSe 25/26</option>
+        </select>
+      </h2>
 
-	const getTimes = (course: Course) => {
-		const times: { lecture: TimeSlot[], tutorial: TimeSlot[] } = { lecture: [], tutorial: [] };
-		const addTimes = (zeitString: string | undefined, isLecture: boolean) => {
-			if (!zeitString) return;
-			const parts = zeitString.split(', ');
-			for (const part of parts) {
-				const [day, time] = part.split(' ');
-				const [start, end] = time.split('-').map(Number);
-				if (isLecture) {
-					times.lecture.push({ day, start, end });
-				} else {
-					times.tutorial.push({ day, start, end });
-				}
-			}
-		};
-		addTimes(course.schedule, true);
-		addTimes(course.tutorial, false);
-		return times;
-	};
+      <Schedule
+        selectedCourses={selectedCourses}
+        selectedSemester={selectedSemester}
+        isMobile={isMobile}
+      />
 
-	const getConflicts = (course: Course): Conflict => {
-		if (!course.schedule) return getEmptyConflict();
-		if (course.semester !== selectedSemester) return getEmptyConflict();
+      <h2>Verfügbare Vorlesungen</h2>
+      <div className="controls">
+        <label>
+          <input
+            type="checkbox"
+            checked={showBachelorCourses}
+            onChange={(e) => setShowBachelorCourses(e.target.checked)}
+          />
+          Bachelor-Vorlesungen anzeigen
+        </label>
+      </div>
+      {showBachelorCourses && (
+        <div className="disclaimer">
+          <b>Hinweis:</b> Bachelorkurse werden nach §8 Absatz 3 der Prüfungsordnung nur auf Antrag anerkannt. Bitte kläre die Anerkennung mit dem Prüfungsamt ab.
+        </div>
+      )}
 
-		// check lecture times
-		for (const otherCourse of selectedCourses) {
-			if (otherCourse.id === course.id) continue;
-			if (hasLectureConflict(getTimes(course).lecture, getTimes(otherCourse).lecture)) {
-				return { ids: [course.id, otherCourse.id], reason: 'Vorlesungen überschneiden sich' };
-			}
-		}
+      <CourseList
+        courses={courses}
+        selectedCourses={selectedCourses}
+        showBachelorCourses={showBachelorCourses}
+        onCourseToggle={handleCourseToggle}
+        conflicts={conflicts}
+      />
 
-		// check tutorial times, only for tutorials of this course
-		const times = getTimes(course);
-		const tutorialConflicts: Conflict = getEmptyConflict();
-		for (const tutorialTimeSlot of times.tutorial) {
-			for (const otherCourse of selectedCourses) {
-				if (otherCourse.id === course.id) continue;
-				if (hasLectureConflict([tutorialTimeSlot], getTimes(otherCourse).lecture)) {
-					if (tutorialConflicts.ids.length == 0) {
-						tutorialConflicts.ids.push(course.id);
-						tutorialConflicts.ids.push(otherCourse.id);
-					} else {
-						tutorialConflicts.ids.push(otherCourse.id);
-					}
-				}
-			}
-		}
-
-		if (tutorialConflicts.ids.length == times.tutorial.length + 1) {
-			tutorialConflicts.reason = 'Übungen überschneiden sich mit Vorlesungen';
-			return tutorialConflicts;
-		}
-
-		return getEmptyConflict();
-	};
-
-	const totalCP = selectedCourses.reduce((sum, course) => sum + course.cp, 0);
-	const fmCP = selectedCourses.filter(course => course.domain === "FM").reduce((sum, course) => sum + course.cp, 0);
-	const piCP = selectedCourses.filter(course => course.domain === "PI").reduce((sum, course) => sum + course.cp, 0);
-
-	const isDuplicateSelected = (course: Course) => {
-		return selectedCourses.some(c => c.name === course.name && c.id !== course.id);
-	};
-
-	const isConflict = (courseId: number) => {
-		return conflicts.some(conflict => conflict.ids.includes(courseId));
-	};
-
-	const getSemesterClass = (semester: string): string => {
-		const cleanSemester = semester.replace(/\s/g, '-').replace('/', '-');
-		return `semester-${cleanSemester}`;
-	};
-
-	const generateSchedule = (courses: Course[], semester: string): ScheduleItem[] => {
-		const schedule: ScheduleItem[] = [];
-		const daysOrder = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
-
-		courses.filter(course => course.semester === semester).forEach(course => {
-			const addToSchedule = (timeString: string | undefined, isLecture: boolean) => {
-				if (!timeString) return;
-				const parts = timeString.split(', ');
-				parts.forEach(part => {
-					const [day, time] = part.split(' ');
-					const [start, end] = time.split('-').map(Number);
-					schedule.push({ course, day, start, end, isLecture });
-				});
-			};
-
-			addToSchedule(course.schedule, true);
-			addToSchedule(course.tutorial, false);
-		});
-
-		return schedule.sort((a, b) => {
-			const dayDiff = daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day);
-			return dayDiff !== 0 ? dayDiff : a.start - b.start;
-		});
-	};
-
-	const groupScheduleItemsByDay = (items: ScheduleItem[]): { [key: string]: ScheduleItem[] } => {
-		return items.reduce((acc, item) => {
-			if (!acc[item.day]) {
-				acc[item.day] = [];
-			}
-			acc[item.day].push(item);
-			return acc;
-		}, {} as { [key: string]: ScheduleItem[] });
-	};
-
-	const scheduleItems = generateSchedule(selectedCourses, selectedSemester);
-	const groupedScheduleItems = groupScheduleItemsByDay(scheduleItems);
-
-	const uniqueTimes = Array.from(new Set(scheduleItems.map(item => item.start))).sort((a, b) => a - b);
-
-	return (
-		<div className="App">
-			<h1>Vorlesungsauswahl-Tool für den Bereich "Kerninformatik"</h1>
-
-			Dieses Tool ermöglicht die Auswahl von Vorlesungen aus dem Bereich "Kerninformatik" im Informatik Master der Universität Münster und zeigt den Stundenplan sowie die gesammelten CP an. Zudem werden die gewählten Vorlesungen überprüft und wenn es Überschneidungen bei diesen oder ihren Übungen gibt, wird darauf hingewiesen.
-
-			<div className="disclaimer">
-				<b>Hinweis:</b> Ich übernehme keine Verantwortung für die Richtigkeit der Daten oder eventuelle Fehler! Besonders bei den CP bin ich mir nicht sicher, ob sie korrekt sind.
-				<br></br>
-				<br></br>
-				Alle Daten bleiben lokal im Browser gespeichert und werden nicht an einen Server gesendet. Beim Löschen des Browserspeichers für diese Seite gehen alle Daten verloren!
-			</div>
-
-			<div className="disclaimer">
-				<b>Hinweis:</b> Aktuell sind noch nicht alle Daten vorhanden, es fehlen noch einige Zeiten für das WiSe 24/25! Sobald ich diese weiß, trage ich sie nach.
-			</div>
-
-			{isMobile && (
-				<div className="disclaimer">
-					<b>Hinweis:</b> Obwohl diese Seite für Handys optimiert ist, empfehle ich die Nutzung auf einem größeren Bildschirm, da die Darstellung auf Handys nicht optimal ist.
-				</div>
-			)}
-
-			<h2>Bedingungen</h2>
-			<ProgressBar label="Gesamte CP" current={totalCP} max={51} />
-			<ProgressBar label="Formale Methoden CP" current={fmCP} max={15} />
-			<ProgressBar label="Praktische Informatik CP" current={piCP} max={15} />
-
-			{conflicts.length > 0 && (
-				<div className="warning">
-					<b>Achtung:</b> Es gibt Zeitüberschneidungen zwischen ausgewählten Kursen!
-					<ul>
-						{conflicts.map(conflict => (
-							<li key={conflict.ids.join('-')}>
-								{conflict.ids.map((id, index) => (
-									<span key={id}>
-										{courses.find(c => c.id === id)?.name}
-										{index < conflict.ids.length - 1 && (index === conflict.ids.length - 2 ? ' und ' : ', ')}
-									</span>
-								))}
-								{" (" + conflict.reason + ")"}
-							</li>
-						))}
-					</ul>
-				</div>
-			)}
-
-			{totalCP > 51 && (fmCP < 15 || piCP < 15) && (
-				<div className="warning">
-					<b>Achtung:</b> Du hast genug CP für alle Vorlesungen, aber nicht genug CP für Formale Methoden und/oder Praktische Informatik!
-					<ul>
-						{conflicts.map(conflict => (
-							<li key={conflict.ids.join('-')}>
-								{conflict.ids.map((id, index) => (
-									<span key={id}>
-										{courses.find(c => c.id === id)?.name}
-										{index < conflict.ids.length - 1 && (index === conflict.ids.length - 2 ? ' und ' : ', ')}
-									</span>
-								))}
-								{" (" + conflict.reason + ")"}
-							</li>
-						))}
-					</ul>
-				</div>
-			)}
-
-			<h2>
-				<span className="spacer">Stundenplan</span>
-				<select
-					value={selectedSemester}
-					onChange={(e) => setSelectedSemester(e.target.value)}
-				>
-					<option value="WiSe 24/25">WiSe 24/25</option>
-					<option value="SoSe 25">SoSe 25</option>
-					<option value="WiSe 25/26">WiSe 25/26</option>
-				</select>
-			</h2>
-			{selectedSemester != "WiSe 24/25" &&
-				<div className="disclaimer">
-					<b>Hinweis:</b> Für das Semester {selectedSemester} sind noch keine Zeiten vorhanden, daher kann kein Stundenplan angezeigt werden.
-				</div>
-			}
-			{isMobile ? (
-				<div className="mobile-schedule">
-					{Object.keys(groupedScheduleItems).length === 0 ? (
-						<p>Keine Kurse ausgewählt.</p>
-					) : (
-						Object.entries(groupedScheduleItems).map(([day, items]) => (
-							<div key={day} className="mobile-schedule-day-group">
-								<h3>{day}</h3>
-								{items.map((item, index) => (
-									<div key={index} className={`mobile-schedule-item ${item.isLecture ? 'lecture' : 'tutorial'}`}>
-										<div className="mobile-schedule-time">{`${item.start}:00 - ${item.end}:00`}</div>
-										<div className="mobile-schedule-course">
-											<div className="course-name">{item.course.name}</div>
-											<div className="course-type">
-												<span className={`type-badge ${item.isLecture ? 'lecture-badge' : 'tutorial-badge'}`}>
-													{item.isLecture ? 'V' : 'Ü'}
-												</span>
-											</div>
-										</div>
-									</div>
-								))}
-							</div>
-						))
-					)}
-				</div>
-			) : (
-				<table className="schedule">
-					<thead>
-						<tr>
-							<th>Zeit</th>
-							<th>Montag</th>
-							<th>Dienstag</th>
-							<th>Mittwoch</th>
-							<th>Donnerstag</th>
-							<th>Freitag</th>
-						</tr>
-					</thead>
-					<tbody>
-						{uniqueTimes.length === 0 ? (
-							<tr>
-								<td>Keine Kurse ausgewählt.</td>
-							</tr>
-						) : (
-							uniqueTimes.map((time) => (
-								<tr key={time}>
-									<td>{`${time}:00 - ${time + 2}:00`}</td>
-									{['Mo', 'Di', 'Mi', 'Do', 'Fr'].map(day => {
-										const item = scheduleItems.find(i => i.day === day && i.start === time);
-										return (
-											<td key={day} className={item ? (item.isLecture ? 'lecture' : 'tutorial') : ''}>
-												{item && (
-													<>
-														<div className="course-name">{item.course.name}</div>
-														<div className="course-type">
-															<span className={`type-badge ${item.isLecture ? 'lecture-badge' : 'tutorial-badge'}`}>
-																{item.isLecture ? 'V' : 'Ü'}
-															</span>
-														</div>
-													</>
-												)}
-											</td>
-										);
-									})}
-								</tr>
-							))
-						)}
-					</tbody>
-				</table>
-			)}
-
-			<h2>Verfügbare Vorlesungen</h2>
-			<div className="controls">
-				<label>
-					<input
-						type="checkbox"
-						checked={showBachelorCourses}
-						onChange={(e) => setShowBachelorCourses(e.target.checked)}
-					/>
-					Bachelor-Vorlesungen anzeigen
-				</label>
-			</div>
-			{showBachelorCourses &&
-				<div className="disclaimer">
-					<b>Hinweis:</b> Bachelorkurse werden nach §8 Absatz 3 der Prüfungsordnung nur auf Antrag anerkannt. Bitte kläre die Anerkennung mit dem Prüfungsamt ab.
-				</div>
-			}
-			<div className="table-container">
-				<table className="responsive-table">
-					<thead>
-						<tr>
-							<th></th>
-							<th>Name</th>
-							<th>Dozent</th>
-							<th>Bereich</th>
-							<th>Semester</th>
-							<th>CP</th>
-							<th>Zeit</th>
-							<th>Übung</th>
-						</tr>
-					</thead>
-					<tbody>
-						{courses
-							.filter(course => showBachelorCourses || !course.bachelor)
-							.map(course => (
-								<tr key={course.id} className={`
-									${course.domain} 
-									${isDuplicateSelected(course) ? 'duplicate' : ''}
-									${isConflict(course.id) ? 'conflict' : ''}
-								  `}>
-									<td data-label="Auswahl">
-										<input
-											type="checkbox"
-											checked={selectedCourses.some(c => c.id === course.id)}
-											onChange={() => handleCourseToggle(course)}
-											disabled={isDuplicateSelected(course)}
-										/>
-									</td>
-									<td data-label="Name">
-										<div className="course-name">{course.name}{course.bachelor && <span className="bachelor-badge">Bachelor</span>}</div>
-									</td>
-									<td data-label="Dozent" className="instructor">{course.instructor}</td>
-									<td data-label="Bereich"><span className="domain-badge">{course.domain}</span></td>
-									<td data-label="Semester">
-										<span className={`semester-badge ${getSemesterClass(course.semester)}`}>
-											{course.semester}
-										</span>
-									</td>
-									<td data-label="CP">{course.cp}</td>
-									<td data-label="Zeit">
-										<div className='course-time' >
-											{course.schedule || '?'}
-										</div>
-									</td>
-									<td data-label="Übung">
-										<div className='course-time' >
-											{course.tutorial || '?'}
-										</div>
-									</td>
-								</tr>
-							))}
-					</tbody>
-				</table>
-			</div>
-
-			<footer className="copyright">
-				2024 Elias Ahlers - <a href="https://github.com/EliasAhlers/course-picker">GitHub</a>
-			</footer>
-		</div>
-	);
+      <footer className="copyright">
+        2024 Elias Ahlers - <a href="https://github.com/EliasAhlers/course-picker">GitHub</a>
+      </footer>
+    </div>
+  );
 };
-
-const ProgressBar: React.FC<{ label: string; current: number; max: number }> = ({ label, current, max }) => (
-	<div>
-		<p>{label}: {current}/{max}</p>
-		<div className="progress-bar">
-			<div className="progress" style={{ width: `${Math.min(current / max * 100, 100)}%` }}>
-				<span>{Math.round(current / max * 100)}%</span>
-			</div>
-		</div>
-	</div>
-);
 
 export default App;

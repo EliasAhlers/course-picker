@@ -1,0 +1,166 @@
+.table-container {
+    overflow-x: auto;
+}
+
+.responsive-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.responsive-table th,
+.responsive-table td {
+    border: none;
+    padding: 12px;
+    text-align: left;
+}
+
+.responsive-table th {
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.responsive-table .duplicate {
+    opacity: 0.6;
+    background-color: #f0f0f0;
+    color: #888;
+}
+
+.responsive-table .conflict {
+    background-color: #ffebee;
+}
+
+.course-name {
+    font-weight: bold;
+    max-width: 20vw;
+}
+
+.instructor {
+    font-style: italic;
+}
+
+.domain-badge,
+.semester-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.FM .domain-badge {
+    background-color: #3498db;
+    color: white;
+}
+
+.PI .domain-badge {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.semester-badge {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.semester-WiSe-24-25 {
+    background-color: #a8e6cf;
+}
+
+.semester-SoSe-25 {
+    background-color: #ffd3b6;
+}
+
+.semester-WiSe-25-26 {
+    background-color: #ffaaa5;
+}
+
+.bachelor-badge {
+    display: inline-block;
+    background-color: #ff9800;
+    color: white;
+    font-size: 0.8em;
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+@media screen and (max-width: 600px) {
+    .responsive-table thead {
+        display: none;
+    }
+
+    .responsive-table,
+    .responsive-table tbody,
+    .responsive-table tr,
+    .responsive-table td {
+        display: block;
+        width: 99%;
+    }
+
+    .responsive-table tr {
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: #f9f9f9;
+        position: relative;
+    }
+
+    .responsive-table td {
+        text-align: left;
+        padding: 12px 15px 12px 120px;
+        position: relative;
+        border-bottom: 1px solid #eee;
+        min-height: 44px;
+    }
+
+    .responsive-table td:last-child {
+        border-bottom: none;
+    }
+
+    .responsive-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: 100px;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.85em;
+        color: #555;
+    }
+
+    .responsive-table td:first-child {
+        background-color: #f0f0f0;
+        padding: 15px 50px 15px 15px;
+        text-align: left;
+        min-height: 50px;
+        position: relative;
+    }
+
+    .responsive-table td:first-child::before {
+        content: "Auswahl";
+        display: inline-block;
+        position: static;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.85em;
+        color: #555;
+        margin-right: 10px;
+    }
+
+    .responsive-table input[type="checkbox"] {
+        position: absolute;
+        left: 100px;
+        width: 20px;
+        height: 20px;
+    }
+}
