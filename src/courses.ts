@@ -2,7 +2,7 @@ import { Course } from "./types";
 
 export const courses: Course[] = [
 	{ id: 1, name: "Empirical Security Analysis and Engineering", instructor: "Holz", domain: "PI", semester: "WiSe 24/25", cp: 6, schedule: "Mo 12-14, Mi 12-14" },
-	{ id: 28, name: "Empirical Security Analysis and Engineering Praktikum", instructor: "Holz", domain: "PI", semester: "WiSe 24/25", cp: 3 	},
+	{ id: 28, name: "Empirical Security Analysis and Engineering Praktikum", instructor: "Holz", domain: "PI", semester: "WiSe 24/25", cp: 3, isPraktikum: true, dependsOn: 1 },
 	{ id: 2, name: "Visualisierung", instructor: "Linsen", domain: "PI", semester: "WiSe 24/25", cp: 9, schedule: "Di 10-12, Fr 10-12", tutorial: "Mi 10-12" },
 	{ id: 3, name: "Computer Vision", instructor: "Jiang", domain: "PI", semester: "WiSe 24/25", cp: 9, schedule: "Mo 10-12, Do 10-12" },
 	{ id: 4, name: "Deep Reinforcement Learning", instructor: "Schilling", domain: "PI", semester: "WiSe 24/25", cp: 6, schedule: "Di 10-12, Fr 10-12", tutorial: "Mi 10-12" },

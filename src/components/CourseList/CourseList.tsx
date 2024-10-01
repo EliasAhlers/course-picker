@@ -42,7 +42,7 @@ const CourseList: React.FC<CourseListProps> = ({
           <tr>
             <th></th>
             <th>Name</th>
-            <th>Dozent</th>
+            <th>Dozent:in</th>
             <th>Bereich</th>
             <th>Semester</th>
             <th>CP</th>
