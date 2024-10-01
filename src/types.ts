@@ -8,29 +8,29 @@ export interface Course {
     schedule?: string;
     tutorial?: string;
     bachelor?: boolean;
-}
-
-export interface ScheduleItem {
+    isPraktikum?: boolean;
+    dependsOn?: number; // ID of the base lecture for Praktikum
+  }
+  
+  export interface ScheduleItem {
     course: Course;
     day: string;
     start: number;
     end: number;
     isLecture: boolean;
-}
-
-export interface TimeSlot {
+  }
+  
+  export interface TimeSlot {
     day: string;
     start: number;
     end: number;
-}
-
-// export type Conflict = number[]; // Array of course IDs
-
-export interface Conflict {
+  }
+  
+  export interface Conflict {
     ids: number[];
     reason: string;
-}
-
-export const getEmptyConflict = (): Conflict => {
+  }
+  
+  export const getEmptyConflict = (): Conflict => {
     return { ids: [], reason: '' };
-}
+  }

@@ -9,11 +9,16 @@ import useLocalStorage from './hooks/useLocalStorage';
 import useConflictDetection from './hooks/useConflictDetection';
 import './App.css';
 
+const MAX_LECTURES = 11;
+
 const App: React.FC = () => {
   const [selectedCourses, setSelectedCourses] = useLocalStorage<Course[]>('selectedCourses', []);
   const [selectedSemester, setSelectedSemester] = useState<string>("WiSe 24/25");
   const [showBachelorCourses, setShowBachelorCourses] = useLocalStorage<boolean>('showBachelorCourses', false);
   const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
+
+  const [hiddenBachelorWarning, setHiddenBachelorWarning] = useState<boolean>(false);
+  const [maxLecturesWarning, setMaxLecturesWarning] = useState<boolean>(false);
 
   const conflicts = useConflictDetection(selectedCourses, selectedSemester);
 
@@ -23,13 +28,40 @@ const App: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Handle migration of old localStorage data
+  useEffect(() => {
+    const migratedCourses = selectedCourses.map(course => {
+      const updatedCourse = courses.find(c => c.id === course.id);
+      return updatedCourse || course;
+    });
+    setSelectedCourses(migratedCourses);
+  }, []);
+
+  useEffect(() => {
+    // Check for hidden bachelor courses
+    const hasHiddenBachelorCourses = !showBachelorCourses && selectedCourses.some(course => course.bachelor);
+    setHiddenBachelorWarning(hasHiddenBachelorCourses);
+
+    // Check for max lectures
+    const lectureCount = selectedCourses.filter(course => !course.isPraktikum).length;
+    setMaxLecturesWarning(lectureCount > MAX_LECTURES);
+  }, [showBachelorCourses, selectedCourses]);
+
   const handleCourseToggle = (course: Course) => {
-    setSelectedCourses(prev =>
-      prev.some(c => c.id === course.id)
-        ? prev.filter(c => c.id !== course.id)
-        : [...prev, course]
-    );
+    setSelectedCourses(prev => {
+      const isSelected = prev.some(c => c.id === course.id);
+      if (isSelected) {
+        return prev.filter(c => c.id !== course.id && c.dependsOn !== course.id);
+      } else {
+        if (course.isPraktikum) {
+          const baseCourse = prev.find(c => c.id === course.dependsOn);
+          if (!baseCourse) return prev;
+        }
+        return [...prev, course];
+      }
+    });
   };
+
 
   const totalCP = selectedCourses.reduce((sum, course) => sum + course.cp, 0);
   const fmCP = selectedCourses.filter(course => course.domain === "FM").reduce((sum, course) => sum + course.cp, 0);
@@ -38,7 +70,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <h1>Vorlesungsauswahl-Tool für den Bereich "Kerninformatik"</h1>
-      
+
       <div className="disclaimer">
         <b>Hinweis:</b> Ich übernehme keine Verantwortung für die Richtigkeit der Daten oder eventuelle Fehler! Besonders bei den CP bin ich mir nicht sicher, ob sie korrekt sind.
         <br /><br />
@@ -61,6 +93,12 @@ const App: React.FC = () => {
       <ProgressBar label="Praktische Informatik CP" current={piCP} max={15} />
 
       <ConflictWarning conflicts={conflicts} courses={courses} />
+
+      {maxLecturesWarning && (
+        <div className="warning">
+          <b>Achtung:</b> Es sind mehr als {MAX_LECTURES} Vorlesungen ausgewählt. Bitte beachten, dass du nach PO maximal {MAX_LECTURES} Vorlesungen belegen kannst!
+        </div>
+      )}
 
       <h2>
         <span className="spacer">Stundenplan</span>
@@ -94,6 +132,11 @@ const App: React.FC = () => {
       {showBachelorCourses && (
         <div className="disclaimer">
           <b>Hinweis:</b> Bachelorkurse werden nach §8 Absatz 3 der Prüfungsordnung nur auf Antrag anerkannt. Bitte kläre die Anerkennung mit dem Prüfungsamt ab.
+        </div>
+      )}
+      {hiddenBachelorWarning && (
+        <div className="warning">
+          <b>Achtung:</b> Es sind Bachelor-Vorlesungen ausgewählt, aber die Anzeige von Bachelor-Vorlesungen ist deaktiviert. Diese Vorlesungen werden nicht in der Liste angezeigt, sind aber weiterhin ausgewählt.
         </div>
       )}
 

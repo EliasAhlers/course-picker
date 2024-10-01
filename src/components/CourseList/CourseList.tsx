@@ -25,6 +25,11 @@ const CourseList: React.FC<CourseListProps> = ({
     return conflicts.some(conflict => conflict.ids.includes(courseId));
   };
 
+  const isPraktikumDisabled = (course: Course) => {
+    if (!course.isPraktikum) return false;
+    return !selectedCourses.some(c => c.id === course.dependsOn);
+  };
+
   const getSemesterClass = (semester: string): string => {
     const cleanSemester = semester.replace(/\s/g, '-').replace('/', '-');
     return `semester-${cleanSemester}`;
@@ -53,19 +58,21 @@ const CourseList: React.FC<CourseListProps> = ({
                 ${course.domain} 
                 ${isDuplicateSelected(course) ? 'duplicate' : ''}
                 ${isConflict(course.id) ? 'conflict' : ''}
+                ${course.isPraktikum ? 'praktikum' : ''}
               `}>
                 <td data-label="Auswahl">
                   <input
                     type="checkbox"
                     checked={selectedCourses.some(c => c.id === course.id)}
                     onChange={() => onCourseToggle(course)}
-                    disabled={isDuplicateSelected(course)}
+                    disabled={isDuplicateSelected(course) || isPraktikumDisabled(course)}
                   />
                 </td>
                 <td data-label="Name">
                   <div className="course-name">
                     {course.name}
                     {course.bachelor && <span className="bachelor-badge">Bachelor</span>}
+                    {course.isPraktikum && <span className="praktikum-badge">Praktikum</span>}
                   </div>
                 </td>
                 <td data-label="Dozent" className="instructor">{course.instructor}</td>
@@ -80,7 +87,7 @@ const CourseList: React.FC<CourseListProps> = ({
                   <div className='course-time'>{course.schedule || '?'}</div>
                 </td>
                 <td data-label="Übung">
-                  <div className='course-time'>{course.tutorial || '?'}</div>
+                  <div className='course-time'>{!course.isPraktikum ? (course.tutorial || '?') : ''}</div>
                 </td>
               </tr>
             ))}

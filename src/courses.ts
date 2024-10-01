@@ -2,9 +2,11 @@ import { Course } from "./types";
 
 export const courses: Course[] = [
 	{ id: 1, name: "Empirical Security Analysis and Engineering", instructor: "Holz", domain: "PI", semester: "WiSe 24/25", cp: 6, schedule: "Mo 12-14, Mi 12-14" },
+	{ id: 28, name: "Empirical Security Analysis and Engineering Praktikum", instructor: "Holz", domain: "PI", semester: "WiSe 24/25", cp: 3 	},
 	{ id: 2, name: "Visualisierung", instructor: "Linsen", domain: "PI", semester: "WiSe 24/25", cp: 9, schedule: "Di 10-12, Fr 10-12", tutorial: "Mi 10-12" },
 	{ id: 3, name: "Computer Vision", instructor: "Jiang", domain: "PI", semester: "WiSe 24/25", cp: 9, schedule: "Mo 10-12, Do 10-12" },
 	{ id: 4, name: "Deep Reinforcement Learning", instructor: "Schilling", domain: "PI", semester: "WiSe 24/25", cp: 6, schedule: "Di 10-12, Fr 10-12", tutorial: "Mi 10-12" },
+  	{ id: 27, name: "Deep Reinforcement Learning Praktikum", instructor: "Schilling", domain: "PI", semester: "WiSe 24/25", cp: 3, isPraktikum: true, dependsOn: 4 },
 	{ id: 5, name: "Verteilte Systeme", instructor: "Gorlatch", domain: "PI", semester: "WiSe 24/25", cp: 6, schedule: "Di 16-18", tutorial: "Mi 16-18" },
 	{ id: 6, name: "Algorithmische Geometrie", instructor: "Varenhold", domain: "FM", semester: "WiSe 24/25", cp: 9, schedule: "Mo 12-14, Do 12-14", tutorial: "Fr 10-12, Fr 12-14" },
 	{ id: 7, name: "Modellierung und Analyse von dynamischen Systemen", instructor: "Remke", domain: "FM", semester: "WiSe 24/25", cp: 9, schedule: "Di 12-14, Fr 12-14", tutorial: "Do 12-14" },

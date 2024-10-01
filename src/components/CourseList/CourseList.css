@@ -164,3 +164,14 @@
         height: 20px;
     }
 }
+
+.praktikum-badge {
+    display: inline-block;
+    background-color: #4caf50;
+    color: white;
+    font-size: 0.8em;
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin-left: 5px;
+    vertical-align: middle;
+}
