@@ -5,7 +5,6 @@ export interface Course {
     domain: 'FM' | 'PI';
     semester: string;
     cp: number;
-    cpWithPraktikum?: number;
     schedule?: string;
     tutorial?: string;
     bachelor?: boolean;

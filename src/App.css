@@ -406,8 +406,3 @@ input[type="checkbox"] {
 		vertical-align: middle;
 	}
 }
-
-input[type="checkbox"]:disabled + label {
-    color: #ccc;
-    cursor: not-allowed;
-}

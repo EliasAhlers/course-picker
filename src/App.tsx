@@ -15,13 +15,6 @@ const App: React.FC = () => {
 		const savedSetting = localStorage.getItem('showBachelorCourses');
 		return savedSetting ? JSON.parse(savedSetting) : false;
 	});
-	const [selectedPraktika, setSelectedPraktika] = useState<number[]>(() => {
-        const savedPraktika = localStorage.getItem('selectedPraktika');
-        return savedPraktika ? JSON.parse(savedPraktika) : [];
-    });
-	const [totalCP, setTotalCP] = useState(0);
-    const [fmCP, setFmCP] = useState(0);
-    const [piCP, setPiCP] = useState(0);
 
 
 	useEffect(() => {
@@ -142,34 +135,9 @@ const App: React.FC = () => {
 		return getEmptyConflict();
 	};
 
-	useEffect(() => {
-        localStorage.setItem('selectedPraktika', JSON.stringify(selectedPraktika));
-    }, [selectedPraktika]);
-
-    const handlePraktikumToggle = (courseId: number) => {
-        setSelectedPraktika(prev =>
-            prev.includes(courseId)
-                ? prev.filter(id => id !== courseId)
-                : [...prev, courseId]
-        );
-    };
-
-    const getCourseCP = (course: Course) => {
-        return selectedPraktika.includes(course.id) && course.cpWithPraktikum
-            ? course.cpWithPraktikum
-            : course.cp;
-    };
-
-	useEffect(() => {
-        const newTotalCP = selectedCourses.reduce((sum, course) => sum + getCourseCP(course), 0);
-        const newFmCP = selectedCourses.filter(course => course.domain === "FM").reduce((sum, course) => sum + getCourseCP(course), 0);
-        const newPiCP = selectedCourses.filter(course => course.domain === "PI").reduce((sum, course) => sum + getCourseCP(course), 0);
-        
-        setTotalCP(newTotalCP);
-        setFmCP(newFmCP);
-        setPiCP(newPiCP);
-    }, [selectedCourses, selectedPraktika]);
-
+	const totalCP = selectedCourses.reduce((sum, course) => sum + course.cp, 0);
+	const fmCP = selectedCourses.filter(course => course.domain === "FM").reduce((sum, course) => sum + course.cp, 0);
+	const piCP = selectedCourses.filter(course => course.domain === "PI").reduce((sum, course) => sum + course.cp, 0);
 
 	const isDuplicateSelected = (course: Course) => {
 		return selectedCourses.some(c => c.name === course.name && c.id !== course.id);
@@ -404,7 +372,6 @@ const App: React.FC = () => {
 							<th>CP</th>
 							<th>Zeit</th>
 							<th>Übung</th>
-							<th>Praktikum</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -434,7 +401,7 @@ const App: React.FC = () => {
 											{course.semester}
 										</span>
 									</td>
-									<td data-label="CP">{getCourseCP(course)}</td>
+									<td data-label="CP">{course.cp}</td>
 									<td data-label="Zeit">
 										<div className='course-time' >
 											{course.schedule || '?'}
@@ -445,19 +412,6 @@ const App: React.FC = () => {
 											{course.tutorial || '?'}
 										</div>
 									</td>
-									<td data-label="Praktikum">
-                                        {course.cpWithPraktikum && (
-                                            <div>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedPraktika.includes(course.id)}
-                                                    onChange={() => handlePraktikumToggle(course.id)}
-                                                    disabled={!selectedCourses.some(c => c.id === course.id)}
-                                                />
-                                                (+{course.cpWithPraktikum - course.cp} CP)
-                                            </div>
-                                        )}
-                                    </td>
 								</tr>
 							))}
 					</tbody>
