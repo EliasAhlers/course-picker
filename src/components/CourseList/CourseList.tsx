@@ -1,5 +1,5 @@
 import React from 'react';
-import { Course, Conflict } from '../../types';
+import { Course, Conflict, CourseType } from '../../types';
 import './CourseList.css';
 
 interface CourseListProps {
@@ -26,7 +26,7 @@ const CourseList: React.FC<CourseListProps> = ({
   };
 
   const isPraktikumDisabled = (course: Course) => {
-    if (!course.isPraktikum) return false;
+    if (course.type != CourseType.PRACTICAL) return false;
     return !selectedCourses.some(c => c.id === course.dependsOn);
   };
 
@@ -58,7 +58,9 @@ const CourseList: React.FC<CourseListProps> = ({
                 ${course.domain} 
                 ${isDuplicateSelected(course) ? 'duplicate' : ''}
                 ${isConflict(course.id) ? 'conflict' : ''}
-                ${course.isPraktikum ? 'praktikum' : ''}
+                ${course.type == CourseType.PRACTICAL ? 'praktikum' : ''}
+                ${course.type == CourseType.SEMINARY ? 'seminary' : ''}
+                ${course.type == CourseType.PROJECT ? 'project' : ''}
               `}>
                 <td data-label="Auswahl">
                   <input
@@ -72,7 +74,9 @@ const CourseList: React.FC<CourseListProps> = ({
                   <div className="course-name">
                     {course.name}
                     {course.bachelor && <span className="bachelor-badge">Bachelor</span>}
-                    {course.isPraktikum && <span className="praktikum-badge">Praktikum</span>}
+                    {course.type == CourseType.PRACTICAL && <span className="praktikum-badge">Praktikum</span>}
+                    {course.type == CourseType.SEMINARY && <span className="seminary-badge">Informatikseminar</span>}
+                    {course.type == CourseType.PROJECT && <span className="project-badge">Projektseminar</span>}
                   </div>
                 </td>
                 <td data-label="Dozent" className="instructor">{course.instructor}</td>
@@ -87,7 +91,7 @@ const CourseList: React.FC<CourseListProps> = ({
                   <div className='course-time'>{course.schedule || '?'}</div>
                 </td>
                 <td data-label="Übung">
-                  <div className='course-time'>{!course.isPraktikum ? (course.tutorial || '?') : ''}</div>
+                  <div className='course-time'>{course.type != CourseType.PRACTICAL ? (course.tutorial || '?') : ''}</div>
                 </td>
               </tr>
             ))}

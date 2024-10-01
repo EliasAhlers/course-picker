@@ -1,0 +1,21 @@
+.badge {
+	font-weight: 700;
+	display: inline-block;
+    background-color: #ff9800;
+    color: white;
+    font-size: 0.8em;
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+.badge-seminar {
+	color: #fff;
+	background-color: #007bff;
+}
+
+.badge-proseminar {
+	color: #fff;
+	background-color: #28a745;
+}

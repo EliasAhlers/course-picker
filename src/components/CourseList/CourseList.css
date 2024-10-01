@@ -175,3 +175,25 @@
     margin-left: 5px;
     vertical-align: middle;
 }
+
+.seminary-badge {
+    display: inline-block;
+    background-color: #4ca3af;
+    color: white;
+    font-size: 0.8em;
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+.project-badge {
+    display: inline-block;
+    background-color: #9b59b6;
+    color: white;
+    font-size: 0.8em;
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin-left: 5px;
+    vertical-align: middle;
+}
