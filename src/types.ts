@@ -11,6 +11,7 @@ export interface Course {
     // isPraktikum?: boolean;
     type: CourseType;
     dependsOn?: number; // ID of the base lecture for Praktikum
+    room?: string;
 }
 
 export enum CourseType {
@@ -18,6 +19,7 @@ export enum CourseType {
     PRACTICAL = 'practical',
     SEMINARY = 'seminary',
     PROJECT = 'project',
+    NONE = 'none'
 }
 
 export interface ScheduleItem {

@@ -46,6 +46,7 @@ const CourseList: React.FC<CourseListProps> = ({
             <th>Bereich</th>
             <th>Semester</th>
             <th>CP</th>
+            <th>Raum</th>
             <th>Zeit</th>
             <th>Übung</th>
           </tr>
@@ -87,6 +88,7 @@ const CourseList: React.FC<CourseListProps> = ({
                   </span>
                 </td>
                 <td data-label="CP">{course.cp}</td>
+                <td data-label="Raum">{course.room || ''}</td>
                 <td data-label="Zeit">
                   <div className='course-time'>{course.schedule || '?'}</div>
                 </td>

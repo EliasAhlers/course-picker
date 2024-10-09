@@ -19,7 +19,7 @@ const SemesterTable: React.FC<SemesterTableProps> = ({ selectedCourses }) => {
     const renderBadges = (semester: string) => {
         return (
             <>
-                {hasSeminars(semester) && <span className="badge badge-seminar">Seminar</span>}
+                {hasSeminars(semester) && <span className="badge badge-seminar">Informatikseminar</span>}
                 {hasProseminars(semester) && <span className="badge badge-proseminar">Projektseminar</span>}
             </>
         );

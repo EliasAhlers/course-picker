@@ -10,7 +10,7 @@ interface ScheduleProps {
 }
 
 const Schedule: React.FC<ScheduleProps> = ({ selectedCourses, selectedSemester, isMobile }) => {
-  const { scheduleItems, uniqueTimes, groupedScheduleItems } = useScheduleGenerator(selectedCourses, selectedSemester);
+  const { scheduleItems, groupedScheduleItems } = useScheduleGenerator(selectedCourses, selectedSemester);
 
   if (selectedSemester !== "WiSe 24/25") {
     return (
@@ -49,6 +49,13 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourses, selectedSemester, 
     );
   }
 
+  const timeSlots = [
+    { start: 10, end: 12 },
+    { start: 12, end: 14 },
+    { start: 14, end: 16 },
+    { start: 16, end: 18 }
+  ];
+
   return (
     <table className="schedule">
       <thead>
@@ -62,16 +69,16 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourses, selectedSemester, 
         </tr>
       </thead>
       <tbody>
-        {uniqueTimes.length === 0 ? (
+        {timeSlots.length === 0 ? (
           <tr>
             <td colSpan={6}>Keine Kurse ausgewählt.</td>
           </tr>
         ) : (
-          uniqueTimes.map((time) => (
-            <tr key={time}>
-              <td>{`${time}:00 - ${time + 2}:00`}</td>
+          timeSlots.map((slot) => (
+            <tr key={slot.start}>
+              <td>{`${slot.start}:00 - ${slot.end}:00`}</td>
               {['Mo', 'Di', 'Mi', 'Do', 'Fr'].map(day => {
-                const item = scheduleItems.find(i => i.day === day && i.start === time);
+                const item = scheduleItems.find(i => i.day === day && i.start === slot.start);
                 return (
                   <td key={day} className={item ? (item.isLecture ? 'lecture' : 'tutorial') : ''}>
                     {item && (

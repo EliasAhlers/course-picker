@@ -68,10 +68,6 @@ const App: React.FC = () => {
 	const fmCP = selectedCourses.filter(course => course.domain === "FM" && (course.type == CourseType.LECTURE || course.type == CourseType.PRACTICAL)).reduce((sum, course) => sum + course.cp, 0);
 	const piCP = selectedCourses.filter(course => course.domain === "PI" && (course.type == CourseType.LECTURE || course.type == CourseType.PRACTICAL)).reduce((sum, course) => sum + course.cp, 0);
 
-	const wise2425cp = selectedCourses.filter(course => course.semester === "WiSe 24/25").reduce((sum, course) => sum + course.cp, 0);
-	const sose25cp = selectedCourses.filter(course => course.semester === "SoSe 25").reduce((sum, course) => sum + course.cp, 0);
-	const wise2526cp = selectedCourses.filter(course => course.semester === "WiSe 25/26").reduce((sum, course) => sum + course.cp, 0);
-
 	return (
 		<div className="App">
 			<h1>Vorlesungsauswahl-Tool für den Informatik Master Uni Münster</h1>

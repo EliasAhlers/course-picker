@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "ssh elias@ahlers.click \"rm -rf /var/www/ahlers.click/html/tools/$npm_package_name/*\" && scp -r dist/* elias@ahlers.click:/var/www/ahlers.click/html/tools/$npm_package_name"
+
   },
   "dependencies": {
     "react": "^18.3.1",
