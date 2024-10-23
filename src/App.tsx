@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Course, CourseType } from './types';
-import { courses } from './courses';
+import { courses, removedCourseIds } from './courses';
 import CourseList from './components/CourseList/CourseList';
 import ProgressBar from './components/ProgressBar/ProgressBar';
 import Schedule from './components/Schedule/Schedule';
@@ -34,7 +34,7 @@ const App: React.FC = () => {
 		const migratedCourses = selectedCourses.map(course => {
 			const updatedCourse = courses.find(c => c.id === course.id);
 			return updatedCourse || course;
-		});
+		}).filter(course => !removedCourseIds.includes(course.id)); // filter our courses that were removed
 		setSelectedCourses(migratedCourses);
 	}, []);
 
