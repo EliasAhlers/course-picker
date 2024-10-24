@@ -88,23 +88,6 @@ const App: React.FC = () => {
 				</div>
 			)}
 
-			<h2>Bedingungen (Bereich "Kerninformatik")</h2>
-			<ProgressBar label="Gesamte CP" current={totalCP} max={51} />
-			<ProgressBar label="Formale Methoden CP" current={fmCP} max={15} />
-			<ProgressBar label="Praktische Informatik CP" current={piCP} max={15} />
-
-			<ConflictWarning conflicts={conflicts} courses={courses} />
-
-			<h2>CP pro Semester</h2>
-			<SemesterTable selectedCourses={selectedCourses} />
-
-
-			{maxLecturesWarning && (
-				<div className="warning">
-					<b>Achtung:</b> Es sind mehr als {MAX_LECTURES} Vorlesungen ausgewählt. Bitte beachten, dass du nach PO maximal {MAX_LECTURES} Vorlesungen belegen kannst!
-				</div>
-			)}
-
 			<h2>
 				<span className="spacer">Stundenplan</span>
 				<select
@@ -122,6 +105,23 @@ const App: React.FC = () => {
 				selectedSemester={selectedSemester}
 				isMobile={isMobile}
 			/>
+
+			<h2>Bedingungen (Bereich "Kerninformatik")</h2>
+			<ProgressBar label="Gesamte CP" current={totalCP} max={51} />
+			<ProgressBar label="Formale Methoden CP" current={fmCP} max={15} />
+			<ProgressBar label="Praktische Informatik CP" current={piCP} max={15} />
+
+			<ConflictWarning conflicts={conflicts} courses={courses} />
+
+			<h2>CP pro Semester</h2>
+			<SemesterTable selectedCourses={selectedCourses} />
+
+
+			{maxLecturesWarning && (
+				<div className="warning">
+					<b>Achtung:</b> Es sind mehr als {MAX_LECTURES} Vorlesungen ausgewählt. Bitte beachten, dass du nach PO maximal {MAX_LECTURES} Vorlesungen belegen kannst!
+				</div>
+			)}
 
 			<h2>Verfügbare Veranstaltungen</h2>
 			<div className="controls">
