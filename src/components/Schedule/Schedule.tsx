@@ -1,6 +1,6 @@
 import React from 'react';
-import { Course } from '../../types';
 import useScheduleGenerator from '../../hooks/useScheduleGenerator';
+import { Course } from '../../types';
 import './Schedule.css';
 
 interface ScheduleProps {
@@ -62,6 +62,10 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourses, selectedSemester, 
 		const currentDay = now.toLocaleDateString('de-DE', { weekday: 'short' });
 
 		const nextEvent = scheduleItems.find(item => item.day === currentDay && item.start > currentHour);
+
+		const roomOptions: boolean = nextEvent?.course.room ? nextEvent.course.room.includes('/') : false;
+
+
 		return (
 			<div>
 				{nextEvent && (
@@ -70,7 +74,13 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourses, selectedSemester, 
 							Nächster Kurs: <b>{nextEvent.course.name}</b> um <b>{nextEvent.start}:00 Uhr</b>
 							{nextEvent.course.room && (
 								<>
-									{' '}im Raum <b>{nextEvent.course.room}</b>
+									{roomOptions ? (
+										<span>
+											{' im Raum '}<b>{nextEvent.isLecture ? nextEvent.course.room.split('/')[0] : nextEvent.course.room.split('/')[1]}</b>
+										</span>
+									) : (
+										<span>{nextEvent.course.room}</span>
+									)}
 								</>
 							)}
 						</p>
@@ -79,7 +89,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourses, selectedSemester, 
 				{!nextEvent && (
 					<div className="next-event-indicator">
 						<p>
-						Heute keine Kurse mehr.
+							Heute keine Kurse mehr.
 						</p>
 					</div>
 				)}
@@ -89,7 +99,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourses, selectedSemester, 
 
 	return (
 		<>
-			{ nextEventIndicator() }
+			{nextEventIndicator()}
 			<table className="schedule">
 				<thead>
 					<tr>
