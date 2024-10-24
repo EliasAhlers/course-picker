@@ -20,48 +20,12 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourses, selectedSemester, 
 		);
 	}
 
-	if (isMobile) {
-		return (
-			<div className="mobile-schedule">
-				{Object.keys(groupedScheduleItems).length === 0 ? (
-					<p>Keine Kurse ausgewählt.</p>
-				) : (
-					Object.entries(groupedScheduleItems).map(([day, items]) => (
-						<div key={day} className="mobile-schedule-day-group">
-							<h3>{day}</h3>
-							{items.map((item, index) => (
-								<div key={index} className={`mobile-schedule-item ${item.isLecture ? 'lecture' : 'tutorial'}`}>
-									<div className="mobile-schedule-time">{`${item.start}:00 - ${item.end}:00`}</div>
-									<div className="mobile-schedule-course">
-										<div className="course-name">{item.course.name}</div>
-										<div className="course-type">
-											<span className={`type-badge ${item.isLecture ? 'lecture-badge' : 'tutorial-badge'}`}>
-												{item.isLecture ? 'V' : 'Ü'}
-											</span>
-										</div>
-									</div>
-								</div>
-							))}
-						</div>
-					))
-				)}
-			</div>
-		);
-	}
-
-	const timeSlots = [
-		{ start: 10, end: 12 },
-		{ start: 12, end: 14 },
-		{ start: 14, end: 16 },
-		{ start: 16, end: 18 }
-	];
-
 	const nextEventIndicator = () => {
 		const now = new Date();
 		const currentHour = now.getHours();
 		const currentDay = now.toLocaleDateString('de-DE', { weekday: 'short' });
 
-		const nextEvent = scheduleItems.find(item => item.day === currentDay && item.start > currentHour);
+		const nextEvent = scheduleItems.find(item => item.day === currentDay && item.start > currentHour - 1);
 
 		const roomOptions: boolean = nextEvent?.course.room ? nextEvent.course.room.includes('/') : false;
 
@@ -96,6 +60,45 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourses, selectedSemester, 
 			</div>
 		);
 	};
+
+	if (isMobile) {
+		return (
+			<>
+				{nextEventIndicator()}
+				<div className="mobile-schedule">
+					{Object.keys(groupedScheduleItems).length === 0 ? (
+						<p>Keine Kurse ausgewählt.</p>
+					) : (
+						Object.entries(groupedScheduleItems).map(([day, items]) => (
+							<div key={day} className="mobile-schedule-day-group">
+								<h3>{day}</h3>
+								{items.map((item, index) => (
+									<div key={index} className={`mobile-schedule-item ${item.isLecture ? 'lecture' : 'tutorial'}`}>
+										<div className="mobile-schedule-time">{`${item.start}:00 - ${item.end}:00`}</div>
+										<div className="mobile-schedule-course">
+											<div className="course-name">{item.course.name}</div>
+											<div className="course-type">
+												<span className={`type-badge ${item.isLecture ? 'lecture-badge' : 'tutorial-badge'}`}>
+													{item.isLecture ? 'V' : 'Ü'}
+												</span>
+											</div>
+										</div>
+									</div>
+								))}
+							</div>
+						))
+					)}
+				</div>
+			</>
+		);
+	}
+
+	const timeSlots = [
+		{ start: 10, end: 12 },
+		{ start: 12, end: 14 },
+		{ start: 14, end: 16 },
+		{ start: 16, end: 18 }
+	];
 
 	return (
 		<>
