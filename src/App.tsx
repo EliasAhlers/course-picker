@@ -68,6 +68,9 @@ const App: React.FC = () => {
 	const fmCP = selectedCourses.filter(course => course.domain === "FM" && (course.type == CourseType.LECTURE || course.type == CourseType.PRACTICAL)).reduce((sum, course) => sum + course.cp, 0);
 	const piCP = selectedCourses.filter(course => course.domain === "PI" && (course.type == CourseType.LECTURE || course.type == CourseType.PRACTICAL)).reduce((sum, course) => sum + course.cp, 0);
 
+	const seminarySelected = selectedCourses.some(course => course.type === CourseType.SEMINARY);
+	const projectSelected = selectedCourses.some(course => course.type === CourseType.PROJECT);
+
 	return (
 		<div className="App">
 			<h1>Vorlesungsauswahl-Tool für den Informatik Master Uni Münster</h1>
@@ -110,6 +113,10 @@ const App: React.FC = () => {
 			<ProgressBar label="Gesamte CP" current={totalCP} max={51} />
 			<ProgressBar label="Formale Methoden CP" current={fmCP} max={15} />
 			<ProgressBar label="Praktische Informatik CP" current={piCP} max={15} />
+
+			<h2>Bedingungen (Seminare)</h2>
+			Informatikseminar belegt: <span className={seminarySelected ? 'conditionMet' : 'conditionNotMet'} >{seminarySelected ? 'Ja' : 'Nein'}</span><br />
+			Projektseminar belegt:    <span className={projectSelected ? 'conditionMet' : 'conditionNotMet'} >{projectSelected ? 'Ja' : 'Nein'}</span><br />
 
 			<ConflictWarning conflicts={conflicts} courses={courses} />
 

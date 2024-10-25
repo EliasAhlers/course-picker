@@ -213,6 +213,16 @@ input[type="checkbox"] {
 	vertical-align: middle;
 }
 
+.conditionMet {
+	color: green;
+	font-weight: bold;
+}
+
+.conditionNotMet {
+	color: red;
+	font-weight: bold;
+}
+
 .mobile-schedule {
 	display: none;
 }
