@@ -118,3 +118,12 @@
         display: block;
     }
 }
+
+.current-time-line {
+    position: 'absolute';
+    left: 0;
+    right: 0;
+    height: '2px';
+    background-color: 'red';
+    z-index: 1;
+}
