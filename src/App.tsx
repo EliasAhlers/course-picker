@@ -78,9 +78,9 @@ const App: React.FC = () => {
 				Alle Daten bleiben lokal im Browser gespeichert und werden nicht an einen Server gesendet. Beim Löschen des Browserspeichers für diese Seite gehen alle Daten verloren!
 			</div>
 
-			<div className="disclaimer">
+			{/* <div className="disclaimer">
 				<b>Hinweis:</b> Aktuell sind noch nicht alle Daten vorhanden, es fehlen noch einige Zeiten für das WiSe 24/25! Sobald ich diese weiß, trage ich sie nach.
-			</div>
+			</div> */}
 
 			{isMobile && (
 				<div className="disclaimer">

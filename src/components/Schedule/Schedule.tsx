@@ -25,7 +25,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourses, selectedSemester, 
 		const currentHour = now.getHours();
 		const currentDay = now.toLocaleDateString('de-DE', { weekday: 'short' });
 
-		const nextEvent = scheduleItems.find(item => item.day === currentDay && item.start > currentHour - 1);
+		const nextEvent = scheduleItems.find(item => item.day === currentDay && item.start > currentHour - 2);
 
 		const roomOptions: boolean = nextEvent?.course.room ? nextEvent.course.room.includes('/') : false;
 
@@ -35,7 +35,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourses, selectedSemester, 
 				{nextEvent && (
 					<div className="next-event-indicator">
 						<p>
-							Nächster Kurs: <b>{nextEvent.course.name}</b> um <b>{nextEvent.start}:00 Uhr</b>
+							{ (currentHour >= nextEvent.start && (currentHour < nextEvent.start + 2)) ? 'Aktueller' : 'Nächster' } Kurs: <b>{nextEvent.course.name}</b> um <b>{nextEvent.start}:00 Uhr</b>
 							{nextEvent.course.room && (
 								<>
 									{roomOptions ? (
@@ -64,7 +64,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourses, selectedSemester, 
 	const weekDays = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
 
 	if (isMobile) {
-		const sortDaysFromToday = (days: string[]) => {
+		const sortDaysFromToday = (days: string[]): string[] => {
 			const today = new Date().getDay();
 			const todayIndex = today === 0 ? 5 : today - 1;
 
