@@ -61,7 +61,21 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourses, selectedSemester, 
 		);
 	};
 
+	const weekDays = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
+
 	if (isMobile) {
+		const sortDaysFromToday = (days: string[]) => {
+			const today = new Date().getDay();
+			const todayIndex = today === 0 ? 5 : today - 1;
+
+			return days.sort((a: string, b: string) => {
+				const aDist = (weekDays.indexOf(a) - todayIndex + 5) % 5;
+				const bDist = (weekDays.indexOf(b) - todayIndex + 5) % 5;
+
+				return aDist - bDist;
+			});
+		};
+
 		return (
 			<>
 				{nextEventIndicator()}
@@ -69,10 +83,10 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourses, selectedSemester, 
 					{Object.keys(groupedScheduleItems).length === 0 ? (
 						<p>Keine Kurse ausgewählt.</p>
 					) : (
-						Object.entries(groupedScheduleItems).map(([day, items]) => (
+						sortDaysFromToday(Object.keys(groupedScheduleItems)).map(day => (
 							<div key={day} className="mobile-schedule-day-group">
-								<h3>{day}</h3>
-								{items.map((item, index) => (
+								<h3>{day} { weekDays[new Date().getDay()-1] == day ? '(Heute)' : '' }</h3>
+								{groupedScheduleItems[day].map((item, index) => (
 									<div key={index} className={`mobile-schedule-item ${item.isLecture ? 'lecture' : 'tutorial'}`}>
 										<div className="mobile-schedule-time">{`${item.start}:00 - ${item.end}:00`}</div>
 										<div className="mobile-schedule-course">
