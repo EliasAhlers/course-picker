@@ -17,8 +17,18 @@ const CourseList: React.FC<CourseListProps> = ({
 	onCourseToggle,
 	conflicts
 }) => {
-	const isDuplicateSelected = (course: Course) => {
-		return selectedCourses.some(c => c.name === course.name && c.id !== course.id);
+
+	const disabledCourses: Course[] = [];
+
+	const isDisabled = (course: Course): boolean => {
+		if(selectedCourses.some(c => c.name === course.name && c.id !== course.id)) {
+			disabledCourses.push(course);
+			return true;
+		}
+		if(course.dependsOn && disabledCourses.some(c => c.id === course.dependsOn)) {
+			return true;
+		}
+		return false;
 	};
 
 	const isConflict = (courseId: number) => {
@@ -57,7 +67,7 @@ const CourseList: React.FC<CourseListProps> = ({
 						.map(course => (
 							<tr key={course.id} className={`
                 ${course.domain} 
-                ${isDuplicateSelected(course) ? 'duplicate' : ''}
+                ${isDisabled(course) ? 'disabled' : ''}
                 ${isConflict(course.id) ? 'conflict' : ''}
                 ${course.type == CourseType.PRACTICAL ? 'praktikum' : ''}
                 ${course.type == CourseType.SEMINARY ? 'seminary' : ''}
@@ -68,7 +78,7 @@ const CourseList: React.FC<CourseListProps> = ({
 										type="checkbox"
 										checked={selectedCourses.some(c => c.id === course.id)}
 										onChange={() => onCourseToggle(course)}
-										disabled={isDuplicateSelected(course) || isPraktikumDisabled(course)}
+										disabled={isDisabled(course) || isPraktikumDisabled(course)}
 									/>
 								</td>
 								<td data-label="Name">

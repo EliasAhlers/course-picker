@@ -25,7 +25,7 @@
     text-transform: uppercase;
 }
 
-.responsive-table .duplicate {
+.responsive-table .disabled {
     opacity: 0.6;
     background-color: #f0f0f0;
     color: #888;
