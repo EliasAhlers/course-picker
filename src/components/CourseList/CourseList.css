@@ -197,3 +197,14 @@
     margin-left: 5px;
     vertical-align: middle;
 }
+
+.thesis-badge {
+    display: inline-block;
+    background-color: #f39c12;
+    color: white;
+    font-size: 0.8em;
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin-left: 5px;
+    vertical-align: middle;
+}

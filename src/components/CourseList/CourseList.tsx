@@ -91,6 +91,7 @@ const CourseList: React.FC<CourseListProps> = ({
 										{course.type == CourseType.PRACTICAL && <span className="praktikum-badge">Praktikum</span>}
 										{course.type == CourseType.SEMINARY && <span className="seminary-badge">Informatikseminar</span>}
 										{course.type == CourseType.PROJECT && <span className="project-badge">Projektseminar</span>}
+										{course.type == CourseType.THESIS && <span className="thesis-badge">Abschlussarbeit</span>}
 									</div>
 								</td>
 								<td data-label="Dozent" className="instructor">{course.instructor}</td>
@@ -103,10 +104,10 @@ const CourseList: React.FC<CourseListProps> = ({
 								<td data-label="CP">{course.cp}</td>
 								<td data-label="Raum">{course.room || ''}</td>
 								<td data-label="Zeit">
-									<div className='course-time'>{course.schedule || '?'}</div>
+									<div className='course-time'>{course.type != CourseType.THESIS ? (course.schedule || '?') : '/'}</div>
 								</td>
 								<td data-label="Übung">
-									<div className='course-time'>{course.type != CourseType.PRACTICAL && course.type != CourseType.PROJECT && course.type != CourseType.SEMINARY ? (course.tutorial || '?') : '/'}</div>
+									<div className='course-time'>{course.type != CourseType.PRACTICAL && course.type != CourseType.PROJECT && course.type != CourseType.SEMINARY && course.type != CourseType.THESIS ? (course.tutorial || '?') : '/'}</div>
 								</td>
 							</tr>
 						))}

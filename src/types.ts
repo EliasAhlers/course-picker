@@ -17,7 +17,8 @@ export interface Course {
 export enum Semester {
     WiSe2425 = "WiSe 24/25",
     SoSe25 = "SoSe 25",
-    WiSe2526 = "WiSe 25/26"
+    WiSe2526 = "WiSe 25/26",
+    SoSe26 = "SoSe 26",
 }
 
 export enum CourseType {
@@ -25,7 +26,8 @@ export enum CourseType {
     PRACTICAL = 'practical',
     SEMINARY = 'seminary',
     PROJECT = 'project',
-    NONE = 'none'
+    NONE = 'none',
+    THESIS = 'thesis',
 }
 
 export interface ScheduleItem {

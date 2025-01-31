@@ -77,6 +77,7 @@ const App: React.FC = () => {
 
 	const seminarySelected = selectedCourseIds.some(courseId => courses.find(course => course.id === courseId)?.type === CourseType.SEMINARY);
 	const projectSelected = selectedCourseIds.some(courseId => courses.find(course => course.id === courseId)?.type === CourseType.PROJECT);
+	const thesisSelected = selectedCourseIds.some(courseId => courses.find(course => course.id === courseId)?.type === CourseType.THESIS);
 
 	return (
 		<div className="App">
@@ -122,7 +123,7 @@ const App: React.FC = () => {
 				<thead>
 					<tr>
 						<th>Bedingungen (Bereich "Kerninformatik")</th>
-						<th>Bedingungen (Seminare)</th>
+						<th>Bedingungen (Seminare & Masterarbeit)</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -137,6 +138,7 @@ const App: React.FC = () => {
 							{/* <h2>Bedingungen (Seminare)</h2> */}
 							Informatikseminar belegt: <span className={seminarySelected ? 'conditionMet' : 'conditionNotMet'} >{seminarySelected ? 'Ja' : 'Nein'}</span><br />
 							Projektseminar belegt:    <span className={projectSelected ? 'conditionMet' : 'conditionNotMet'} >{projectSelected ? 'Ja' : 'Nein'}</span><br />
+							Masterarbeit belegt:      <span className={thesisSelected ? 'conditionMet' : 'conditionNotMet'} >{thesisSelected ? 'Ja' : 'Nein'}</span>
 						</td>
 					</tr>
 				</tbody>

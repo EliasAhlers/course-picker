@@ -21,11 +21,15 @@ const SemesterTable: React.FC<SemesterTableProps> = ({ selectedCourseIds, custom
     const hasProseminars = (semester: string) =>
         selectedCourses.some(course => course.semester === semester && course.type === CourseType.PROJECT);
 
+    const hasThesis = (semester: string) =>
+        selectedCourses.some(course => course.semester === semester && course.type === CourseType.THESIS);
+
     const renderBadges = (semester: string) => {
         return (
             <>
                 {hasSeminars(semester) && <span className="badge badge-seminar">Informatikseminar</span>}
                 {hasProseminars(semester) && <span className="badge badge-proseminar">Projektseminar</span>}
+                {hasThesis(semester) && <span className="badge badge-thesis">Masterarbeit</span>}
             </>
         );
     };
