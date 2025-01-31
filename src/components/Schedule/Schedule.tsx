@@ -63,7 +63,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourses, selectedSemester, 
 											{' im Raum '}<b>{nextEvent.isLecture ? nextEvent.course.room.split('/')[0] : nextEvent.course.room.split('/')[1]}</b>
 										</span>
 									) : (
-										<span>{nextEvent.course.room}</span>
+										<span> im Raum <b>{nextEvent.course.room}</b></span>
 									)}
 								</>
 							)}

@@ -161,7 +161,7 @@ const App: React.FC = () => {
 			/>
 
 			<footer className="copyright">
-				2024 Elias Ahlers - <a href="https://github.com/EliasAhlers/course-picker">GitHub</a>
+				2025 Elias Ahlers - <a href="https://github.com/EliasAhlers/course-picker">GitHub</a> - <a href="https://ahlers.click">Impressum</a>
 			</footer>
 		</div>
 	);
