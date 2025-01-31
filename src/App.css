@@ -270,6 +270,37 @@ input[type="checkbox"] {
 	margin-left: 10px;
 }
 
+.align-top {
+	vertical-align: top;
+}
+
+.custom-event-form {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 20px;
+}
+
+.custom-event-form label {
+	font-weight: bold;
+}
+
+.custom-event-form select,
+.custom-event-form input {
+	padding: 5px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.custom-event-form button {
+	background-color: #3498db;
+	color: #fff;
+	border: none;
+	padding: 6px 12px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
 @media (max-width: 768px) {
 	.App {
 		padding: 10px;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useScheduleGenerator from '../../hooks/useScheduleGenerator';
 import './Schedule.css';
-import { Semester } from '../../utils/enums';
+import { Semester } from '../../types';
 
 interface ScheduleProps {
 	selectedCourseIds: number[];

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Course, CourseType } from './types';
+import { Course, CourseType, Semester, CustomEvent } from './types';
 import { courses, removedCourseIds } from './courses';
 import CourseList from './components/CourseList/CourseList';
 import ProgressBar from './components/ProgressBar/ProgressBar';
@@ -9,7 +9,6 @@ import useLocalStorage from './hooks/useLocalStorage';
 import useConflictDetection from './hooks/useConflictDetection';
 import './App.css';
 import SemesterTable from './components/SemesterTable/SemesterTable';
-import { Semester } from './utils/enums';
 
 const MAX_LECTURES = 11;
 
@@ -23,6 +22,8 @@ const App: React.FC = () => {
 	const [maxLecturesWarning, setMaxLecturesWarning] = useState<boolean>(false);
 
 	const conflicts = useConflictDetection(selectedCourseIds, selectedSemester);
+
+	const [customEvents, setCustomEvents] = useLocalStorage<CustomEvent[]>('customEvents', []);
 
 	useEffect(() => {
 		const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -103,9 +104,11 @@ const App: React.FC = () => {
 					value={selectedSemester}
 					onChange={(e) => setSelectedSemester(e.target.value)}
 				>
-					<option value={Semester.WiSe2425}>WiSe 24/25</option>
-					<option value={Semester.SoSe25}>SoSe 25</option>
-					<option value={Semester.WiSe2526}>WiSe 25/26</option>
+					{
+						Object.keys(Semester).map((key) => (
+							<option key={key} value={key}>{Semester[key as keyof typeof Semester]}</option>
+						))
+					}
 				</select>
 			</h2>
 
@@ -115,23 +118,40 @@ const App: React.FC = () => {
 				isMobile={isMobile}
 			/>
 
-			<h2>Bedingungen (Bereich "Kerninformatik")</h2>
-			<ProgressBar label="Gesamte CP" current={totalCP} max={51} />
-			<ProgressBar label="Formale Methoden CP" current={fmCP} max={15} />
-			<ProgressBar label="Praktische Informatik CP" current={piCP} max={15} />
+			<table>
+				<thead>
+					<tr>
+						<th>Bedingungen (Bereich "Kerninformatik")</th>
+						<th>Bedingungen (Seminare)</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							{/* <h2>Bedingungen (Bereich "Kerninformatik")</h2> */}
+							<ProgressBar label="Gesamte CP" current={totalCP} max={51} />
+							<ProgressBar label="Formale Methoden CP" current={fmCP} max={15} />
+							<ProgressBar label="Praktische Informatik CP" current={piCP} max={15} />
+						</td>
+						<td className='align-top'>
+							{/* <h2>Bedingungen (Seminare)</h2> */}
+							Informatikseminar belegt: <span className={seminarySelected ? 'conditionMet' : 'conditionNotMet'} >{seminarySelected ? 'Ja' : 'Nein'}</span><br />
+							Projektseminar belegt:    <span className={projectSelected ? 'conditionMet' : 'conditionNotMet'} >{projectSelected ? 'Ja' : 'Nein'}</span><br />
+						</td>
+					</tr>
+				</tbody>
+			</table>
 
-			<h2>Bedingungen (Seminare)</h2>
-			Informatikseminar belegt: <span className={seminarySelected ? 'conditionMet' : 'conditionNotMet'} >{seminarySelected ? 'Ja' : 'Nein'}</span><br />
-			Projektseminar belegt:    <span className={projectSelected ? 'conditionMet' : 'conditionNotMet'} >{projectSelected ? 'Ja' : 'Nein'}</span><br />
+
 
 			<ConflictWarning conflicts={conflicts} courses={courses} />
 
 			<h2>CP pro Semester</h2>
-			<SemesterTable selectedCourseIds={selectedCourseIds} />
-
-			<h2>Eigene Veranstaltung</h2>
-			Hier können z.B. Zusatzkompetenzen oder andere Veranstaltungen eingetragen werden, die nicht in der Liste sind.
-			Diese werden nicht auf Konflikte überprüft, aber in die CP pro Semester eingerechnet.
+			<SemesterTable
+				selectedCourseIds={selectedCourseIds}
+				customEvents={customEvents}
+				setCustomEvents={setCustomEvents}
+			/>
 
 
 			{maxLecturesWarning && (

@@ -1,5 +1,4 @@
-import { Course, CourseType } from "./types";
-import { Semester } from "./utils/enums";
+import { Course, CourseType, Semester } from "./types";
 
 export const removedCourseIds: number[] = [
 	28,

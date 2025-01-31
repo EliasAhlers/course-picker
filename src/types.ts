@@ -14,6 +14,12 @@ export interface Course {
     room?: string;
 }
 
+export enum Semester {
+    WiSe2425 = "WiSe 24/25",
+    SoSe25 = "SoSe 25",
+    WiSe2526 = "WiSe 25/26"
+}
+
 export enum CourseType {
     LECTURE = 'lecture',
     PRACTICAL = 'practical',
@@ -39,6 +45,12 @@ export interface TimeSlot {
 export interface Conflict {
     ids: number[];
     reason: string;
+}
+
+export interface CustomEvent {
+    name: string;
+    semester: string;
+    cp: number;
 }
 
 export const getEmptyConflict = (): Conflict => {
