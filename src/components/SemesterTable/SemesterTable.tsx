@@ -45,7 +45,7 @@ const SemesterTable: React.FC<SemesterTableProps> = ({ selectedCourseIds, custom
                     <tr>
                         <th>Semester</th>
                         <th>CP</th>
-                        <th>Seminare</th>
+                        <th>Seminare & Arbeiten</th>
                         <th>Veranstaltungen</th>
                     </tr>
                 </thead>

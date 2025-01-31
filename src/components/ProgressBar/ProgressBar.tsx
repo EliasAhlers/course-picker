@@ -9,7 +9,7 @@ interface ProgressBarProps {
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ label, current, max }) => (
   <div className="progress-bar-container">
-    <p>{label}: {current}/{max}</p>
+    <p>{label}: {current}/{max} {current >= max ? <b><span className='conditionMet'>OK</span></b> : ''}</p>
     <div className="progress-bar">
       <div 
         className="progress" 

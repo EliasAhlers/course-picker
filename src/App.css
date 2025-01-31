@@ -97,6 +97,12 @@ th {
 	border: 1px solid #bee5eb;
 }
 
+.attention {
+	background-color: #dabf6c;
+	color: black;
+	border: 1px solid #dabf6c;
+}
+
 input[type="checkbox"] {
 	transform: scale(1.2);
 	margin-right: 5px;

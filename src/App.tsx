@@ -94,8 +94,9 @@ const App: React.FC = () => {
 			</div> */}
 
 			{isMobile && (
-				<div className="disclaimer">
-					<b>Hinweis:</b> Obwohl diese Seite für Handys optimiert ist, empfehle ich die Nutzung auf einem größeren Bildschirm, da die Darstellung auf Handys nicht optimal ist.
+				<div className="disclaimer attention">
+					{/* <b>Hinweis:</b> Obwohl diese Seite für Handys optimiert ist, empfehle ich die Nutzung auf einem größeren Bildschirm, da die Darstellung auf Handys nicht optimal ist. */}
+					<b>Hinweis:</b> Durch das letzte Update ist die Darstellung am Handy an einigen Stellen kaputt, am besten einfach auf einem größeren Bildschirm nutzen.
 				</div>
 			)}
 
