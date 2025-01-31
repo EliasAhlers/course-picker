@@ -106,7 +106,7 @@ const CourseList: React.FC<CourseListProps> = ({
 									<div className='course-time'>{course.schedule || '?'}</div>
 								</td>
 								<td data-label="Übung">
-									<div className='course-time'>{course.type != CourseType.PRACTICAL ? (course.tutorial || '?') : ''}</div>
+									<div className='course-time'>{course.type != CourseType.PRACTICAL && course.type != CourseType.PROJECT && course.type != CourseType.SEMINARY ? (course.tutorial || '?') : '/'}</div>
 								</td>
 							</tr>
 						))}

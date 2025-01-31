@@ -41,7 +41,7 @@ export const courses: Course[] = [
 	{ id: 14, type: CourseType.LECTURE, name: "Automated Planning and Acting", instructor: "Braun", domain: "FM", semester: "WiSe 25/26", cp: 6 },
 	{ id: 15, type: CourseType.LECTURE, name: "Lambda-Kalkül und funkt. Sprachen", instructor: "Lammers", domain: "FM", semester: "WiSe 25/26", cp: 6 },
 	{ id: 16, type: CourseType.LECTURE, name: "Computer Vision", instructor: "Jiang", domain: "PI", semester: "WiSe 25/26", cp: 9 },
-	{ id: 108, type: CourseType.PRACTICAL, name: "Computer Vision Praktikum", instructor: "Jiang", domain: "PI", semester: "WiSe 25/26", cp: 3, schedule: "", dependsOn: 16 },
+	{ id: 108, type: CourseType.PRACTICAL, name: "Computer Vision Praktikum", instructor: "Jiang", domain: "PI", semester: "WiSe 25/26", cp: 3, dependsOn: 16 },
 	{ id: 17, type: CourseType.LECTURE, name: "Deep Reinforcement Learning", instructor: "Schilling", domain: "PI", semester: "WiSe 25/26", cp: 6 },
 	{ id: 109, type: CourseType.PRACTICAL, name: "Deep Reinforcement Learning Praktikum", instructor: "Schilling", domain: "PI", semester: "WiSe 25/26", cp: 3, dependsOn: 17 },
 	{ id: 18, type: CourseType.LECTURE, name: "Sicherheit in eingebetteten Systemen", instructor: "Herber", domain: "PI", semester: "WiSe 25/26", cp: 6 },
