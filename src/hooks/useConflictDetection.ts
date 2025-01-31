@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Course, Conflict, TimeSlot } from '../types';
+import { courses } from '../courses';
 
-const useConflictDetection = (selectedCourses: Course[], selectedSemester: string) => {
+const useConflictDetection = (selectedCourseIds: number[], selectedSemester: string) => {
   const [conflicts, setConflicts] = useState<Conflict[]>([]);
 
   useEffect(() => {
+    const selectedCourses = courses.filter(course => selectedCourseIds.includes(course.id));
     const newConflicts = detectConflicts(selectedCourses, selectedSemester);
     setConflicts(newConflicts);
-  }, [selectedCourses, selectedSemester]);
+  }, [selectedCourseIds, selectedSemester]);
 
   const detectConflicts = (courses: Course[], semester: string): Conflict[] => {
     const conflicts: Conflict[] = [];

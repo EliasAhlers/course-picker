@@ -4,7 +4,7 @@ import './CourseList.css';
 
 interface CourseListProps {
 	courses: Course[];
-	selectedCourses: Course[];
+	selectedCourseIds: number[];
 	showBachelorCourses: boolean;
 	onCourseToggle: (course: Course) => void;
 	conflicts: Conflict[];
@@ -12,7 +12,7 @@ interface CourseListProps {
 
 const CourseList: React.FC<CourseListProps> = ({
 	courses,
-	selectedCourses,
+	selectedCourseIds,
 	showBachelorCourses,
 	onCourseToggle,
 	conflicts
@@ -21,7 +21,8 @@ const CourseList: React.FC<CourseListProps> = ({
 	const disabledCourses: Course[] = [];
 
 	const isDisabled = (course: Course): boolean => {
-		if(selectedCourses.some(c => c.name === course.name && c.id !== course.id)) {
+		const selectedFullCourses = courses.filter(c => selectedCourseIds.includes(c.id));
+		if (selectedFullCourses.some(c => c.name === course.name && c.id !== course.id)) {
 			disabledCourses.push(course);
 			return true;
 		}
@@ -37,7 +38,8 @@ const CourseList: React.FC<CourseListProps> = ({
 
 	const isPraktikumDisabled = (course: Course) => {
 		if (course.type != CourseType.PRACTICAL) return false;
-		return !selectedCourses.some(c => c.id === course.dependsOn);
+		// return !selectedCourses.some(c => c.id === course.dependsOn);
+		return !course.dependsOn || !selectedCourseIds.includes(course.dependsOn);
 	};
 
 	const getSemesterClass = (semester: string): string => {
@@ -76,7 +78,8 @@ const CourseList: React.FC<CourseListProps> = ({
 								<td data-label="Auswahl">
 									<input
 										type="checkbox"
-										checked={selectedCourses.some(c => c.id === course.id)}
+										// checked={selectedCourses.some(c => c.id === course.id)}
+										checked={selectedCourseIds.includes(course.id)}
 										onChange={() => onCourseToggle(course)}
 										disabled={isDisabled(course) || isPraktikumDisabled(course)}
 									/>

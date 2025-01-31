@@ -1,12 +1,14 @@
 import React from 'react';
-import { Course, CourseType } from '../../types';
+import { CourseType } from '../../types';
 import './SemesterTable.css';
+import { courses } from '../../courses';
 
 interface SemesterTableProps {
-    selectedCourses: Course[];
+    selectedCourseIds: number[];
 }
 
-const SemesterTable: React.FC<SemesterTableProps> = ({ selectedCourses }) => {
+const SemesterTable: React.FC<SemesterTableProps> = ({ selectedCourseIds }) => {
+    const selectedCourses = courses.filter(course => selectedCourseIds.includes(course.id));
     const calculateCP = (semester: string) =>
         selectedCourses.filter(course => course.semester === semester).reduce((sum, course) => sum + course.cp, 0);
 

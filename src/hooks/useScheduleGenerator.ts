@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Course, ScheduleItem } from '../types';
+import { courses } from '../courses';
 
-const useScheduleGenerator = (selectedCourses: Course[], selectedSemester: string) => {
+const useScheduleGenerator = (selectedCourseIds: number[], selectedSemester: string) => {
 	const [scheduleItems, setScheduleItems] = useState<ScheduleItem[]>([]);
 	const [uniqueTimes, setUniqueTimes] = useState<number[]>([]);
 	const [groupedScheduleItems, setGroupedScheduleItems] = useState<{ [key: string]: ScheduleItem[] }>({});
 
 	useEffect(() => {
+		const selectedCourses = courses.filter(course => selectedCourseIds.includes(course.id));
 		const newScheduleItems = generateSchedule(selectedCourses, selectedSemester);
 		setScheduleItems(newScheduleItems);
 
@@ -15,7 +17,7 @@ const useScheduleGenerator = (selectedCourses: Course[], selectedSemester: strin
 
 		const newGroupedScheduleItems = groupScheduleItemsByDay(newScheduleItems);
 		setGroupedScheduleItems(newGroupedScheduleItems);
-	}, [selectedCourses, selectedSemester]);
+	}, [selectedCourseIds, selectedSemester]);
 
 	const generateSchedule = (courses: Course[], semester: string): ScheduleItem[] => {
 		const schedule: ScheduleItem[] = [];

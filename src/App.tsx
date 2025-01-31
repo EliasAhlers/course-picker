@@ -13,7 +13,7 @@ import SemesterTable from './components/SemesterTable/SemesterTable';
 const MAX_LECTURES = 11;
 
 const App: React.FC = () => {
-	const [selectedCourses, setSelectedCourses] = useLocalStorage<Course[]>('selectedCourses', []);
+	const [selectedCourseIds, setSelectedCourseIds] = useLocalStorage<number[]>('selectedCourseIds', []);
 	const [selectedSemester, setSelectedSemester] = useState<string>("WiSe 24/25");
 	const [showBachelorCourses, setShowBachelorCourses] = useLocalStorage<boolean>('showBachelorCourses', false);
 	const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
@@ -21,7 +21,7 @@ const App: React.FC = () => {
 	const [hiddenBachelorWarning, setHiddenBachelorWarning] = useState<boolean>(false);
 	const [maxLecturesWarning, setMaxLecturesWarning] = useState<boolean>(false);
 
-	const conflicts = useConflictDetection(selectedCourses, selectedSemester);
+	const conflicts = useConflictDetection(selectedCourseIds, selectedSemester);
 
 	useEffect(() => {
 		const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -29,54 +29,59 @@ const App: React.FC = () => {
 		return () => window.removeEventListener('resize', handleResize);
 	}, []);
 
-	// Handle migration of old localStorage data
 	useEffect(() => {
-		const migratedCourses = selectedCourses.map(course => {
-			const updatedCourse = courses.find(c => c.id === course.id);
-			return updatedCourse || course;
-		}).filter(course => !removedCourseIds.includes(course.id)); // filter our courses that were removed
-		setSelectedCourses(migratedCourses);
+		// Handle migration of old localStorage data
+		const oldLocalData = localStorage.getItem('selectedCourses');
+		if(oldLocalData != null) {
+			const oldSelectedCourses = JSON.parse(oldLocalData) as Course[];
+			const oldSelectedCourseIds = oldSelectedCourses.map(course => course.id);
+			setSelectedCourseIds(oldSelectedCourseIds);
+			localStorage.removeItem('selectedCourses');
+			console.log('Migrated old localStorage data to new format');
+		}
+		// Handle management of deleted courses
+		setSelectedCourseIds(prev => prev.filter(id => !removedCourseIds.includes(id)));
 	}, []);
 
 	useEffect(() => {
 		// Check for hidden bachelor courses
-		const hasHiddenBachelorCourses = !showBachelorCourses && selectedCourses.some(course => course.bachelor);
+		const hasHiddenBachelorCourses = !showBachelorCourses && selectedCourseIds.some(courseId => courses.find(course => course.id === courseId)?.bachelor);
 		setHiddenBachelorWarning(hasHiddenBachelorCourses);
 
 		// Check for max lectures
-		const lectureCount = selectedCourses.filter(course => course.type != CourseType.LECTURE).length;
+		const lectureCount = selectedCourseIds.filter(courseId => courses.find(course => course.id === courseId)?.type != CourseType.LECTURE).length;
 		setMaxLecturesWarning(lectureCount > MAX_LECTURES);
-	}, [showBachelorCourses, selectedCourses]);
+	}, [showBachelorCourses, selectedCourseIds]);
 
 	const handleCourseToggle = (course: Course) => {
-		setSelectedCourses(prev => {
-			const isSelected = prev.some(c => c.id === course.id);
+		setSelectedCourseIds(prev => {
+			const isSelected = prev.includes(course.id);
 			if (isSelected) {
-				return prev.filter(c => c.id !== course.id && c.dependsOn !== course.id);
+				return prev.filter(id => id !== course.id && courses.find(c => c.id === id)?.dependsOn !== course.id);
 			} else {
 				if (course.type == CourseType.PRACTICAL) {
-					const baseCourse = prev.find(c => c.id === course.dependsOn);
+					const baseCourse = courses.find(c => c.id === course.dependsOn);
 					if (!baseCourse) return prev;
 				}
-				return [...prev, course];
+				return [...prev, course.id];
 			}
 		});
 	};
 
 
-	const totalCP = selectedCourses.filter(course => course.type == CourseType.LECTURE || course.type == CourseType.PRACTICAL).reduce((sum, course) => sum + course.cp, 0);
-	const fmCP = selectedCourses.filter(course => course.domain === "FM" && (course.type == CourseType.LECTURE || course.type == CourseType.PRACTICAL)).reduce((sum, course) => sum + course.cp, 0);
-	const piCP = selectedCourses.filter(course => course.domain === "PI" && (course.type == CourseType.LECTURE || course.type == CourseType.PRACTICAL)).reduce((sum, course) => sum + course.cp, 0);
+	const totalCP = selectedCourseIds.map(courseId => courses.find(course => course.id === courseId)).filter(course => course?.type == CourseType.LECTURE || course?.type == CourseType.PRACTICAL).reduce((sum, course) => sum + course!.cp, 0);
+	const fmCP = selectedCourseIds.map(courseId => courses.find(course => course.id === courseId)).filter(course => course?.domain === "FM" && (course?.type == CourseType.LECTURE || course?.type == CourseType.PRACTICAL)).reduce((sum, course) => sum + course!.cp, 0);
+	const piCP = selectedCourseIds.map(courseId => courses.find(course => course.id === courseId)).filter(course => course?.domain === "PI" && (course?.type == CourseType.LECTURE || course?.type == CourseType.PRACTICAL)).reduce((sum, course) => sum + course!.cp, 0);
 
-	const seminarySelected = selectedCourses.some(course => course.type === CourseType.SEMINARY);
-	const projectSelected = selectedCourses.some(course => course.type === CourseType.PROJECT);
+	const seminarySelected = selectedCourseIds.some(courseId => courses.find(course => course.id === courseId)?.type === CourseType.SEMINARY);
+	const projectSelected = selectedCourseIds.some(courseId => courses.find(course => course.id === courseId)?.type === CourseType.PROJECT);
 
 	return (
 		<div className="App">
 			<h1>Vorlesungsauswahl-Tool für den Informatik Master Uni Münster</h1>
 
 			<div className="disclaimer">
-				<b>Hinweis:</b> Ich übernehme keine Verantwortung für die Richtigkeit der Daten oder eventuelle Fehler! Besonders bei den CP bin ich mir nicht sicher, ob sie korrekt sind.
+				<b>Hinweis:</b> Ich übernehme keine Verantwortung für die Richtigkeit der Daten oder eventuelle Fehler! Besonders bei den CP bin ich mir nicht sicher, ob sie korrekt sind, einige sind Schätzungen. <b>Letztes Update: 31.01.2025</b>
 				<br /><br />
 				Alle Daten bleiben lokal im Browser gespeichert und werden nicht an einen Server gesendet. Beim Löschen des Browserspeichers für diese Seite gehen alle Daten verloren!
 			</div>
@@ -104,7 +109,7 @@ const App: React.FC = () => {
 			</h2>
 
 			<Schedule
-				selectedCourses={selectedCourses}
+				selectedCourseIds={selectedCourseIds}
 				selectedSemester={selectedSemester}
 				isMobile={isMobile}
 			/>
@@ -121,7 +126,7 @@ const App: React.FC = () => {
 			<ConflictWarning conflicts={conflicts} courses={courses} />
 
 			<h2>CP pro Semester</h2>
-			<SemesterTable selectedCourses={selectedCourses} />
+			<SemesterTable selectedCourseIds={selectedCourseIds} />
 
 
 			{maxLecturesWarning && (
@@ -154,7 +159,7 @@ const App: React.FC = () => {
 
 			<CourseList
 				courses={courses}
-				selectedCourses={selectedCourses}
+				selectedCourseIds={selectedCourseIds}
 				showBachelorCourses={showBachelorCourses}
 				onCourseToggle={handleCourseToggle}
 				conflicts={conflicts}
