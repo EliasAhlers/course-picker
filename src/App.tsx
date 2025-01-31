@@ -9,12 +9,13 @@ import useLocalStorage from './hooks/useLocalStorage';
 import useConflictDetection from './hooks/useConflictDetection';
 import './App.css';
 import SemesterTable from './components/SemesterTable/SemesterTable';
+import { Semester } from './utils/enums';
 
 const MAX_LECTURES = 11;
 
 const App: React.FC = () => {
 	const [selectedCourseIds, setSelectedCourseIds] = useLocalStorage<number[]>('selectedCourseIds', []);
-	const [selectedSemester, setSelectedSemester] = useState<string>("WiSe 24/25");
+	const [selectedSemester, setSelectedSemester] = useState<string>(Semester.WiSe2425);
 	const [showBachelorCourses, setShowBachelorCourses] = useLocalStorage<boolean>('showBachelorCourses', false);
 	const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
 
@@ -102,9 +103,9 @@ const App: React.FC = () => {
 					value={selectedSemester}
 					onChange={(e) => setSelectedSemester(e.target.value)}
 				>
-					<option value="WiSe 24/25">WiSe 24/25</option>
-					<option value="SoSe 25">SoSe 25</option>
-					<option value="WiSe 25/26">WiSe 25/26</option>
+					<option value={Semester.WiSe2425}>WiSe 24/25</option>
+					<option value={Semester.SoSe25}>SoSe 25</option>
+					<option value={Semester.WiSe2526}>WiSe 25/26</option>
 				</select>
 			</h2>
 
@@ -127,6 +128,10 @@ const App: React.FC = () => {
 
 			<h2>CP pro Semester</h2>
 			<SemesterTable selectedCourseIds={selectedCourseIds} />
+
+			<h2>Eigene Veranstaltung</h2>
+			Hier können z.B. Zusatzkompetenzen oder andere Veranstaltungen eingetragen werden, die nicht in der Liste sind.
+			Diese werden nicht auf Konflikte überprüft, aber in die CP pro Semester eingerechnet.
 
 
 			{maxLecturesWarning && (

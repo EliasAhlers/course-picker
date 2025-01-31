@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useScheduleGenerator from '../../hooks/useScheduleGenerator';
 import './Schedule.css';
+import { Semester } from '../../utils/enums';
 
 interface ScheduleProps {
 	selectedCourseIds: number[];
@@ -31,7 +32,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 		return () => clearInterval(interval);
 	}, []);
 
-	if (selectedSemester !== "WiSe 24/25") {
+	if (selectedSemester !== Semester.WiSe2425) {
 		return (
 			<div className="disclaimer">
 				<b>Hinweis:</b> Für das Semester {selectedSemester} sind noch keine Zeiten vorhanden, daher kann kein Stundenplan angezeigt werden.

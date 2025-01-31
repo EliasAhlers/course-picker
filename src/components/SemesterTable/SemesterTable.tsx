@@ -2,6 +2,7 @@ import React from 'react';
 import { CourseType } from '../../types';
 import './SemesterTable.css';
 import { courses } from '../../courses';
+import { Semester } from '../../utils/enums';
 
 interface SemesterTableProps {
     selectedCourseIds: number[];
@@ -39,13 +40,13 @@ const SemesterTable: React.FC<SemesterTableProps> = ({ selectedCourseIds }) => {
             <tbody>
                 <tr>
                     <td>WiSe 24/25</td>
-                    <td>{calculateCP("WiSe 24/25")}</td>
-                    <td>{renderBadges("WiSe 24/25")}</td>
+                    <td>{calculateCP(Semester.WiSe2425)}</td>
+                    <td>{renderBadges(Semester.WiSe2425)}</td>
                 </tr>
                 <tr>
                     <td>SoSe 25</td>
-                    <td>{calculateCP("SoSe 25")}</td>
-                    <td>{renderBadges("SoSe 25")}</td>
+                    <td>{calculateCP(Semester.SoSe25)}</td>
+                    <td>{renderBadges(Semester.SoSe25)}</td>
                 </tr>
                 <tr>
                     <td>WiSe 25/26</td>
