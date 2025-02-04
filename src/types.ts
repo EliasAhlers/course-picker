@@ -49,10 +49,17 @@ export interface Conflict {
     reason: string;
 }
 
+export enum CustomEventType {
+    PI_LECTURE = "Praktische Informatik",
+    FM_LECTURE = "Formale Methoden",
+    GENERAL = "Allgemeine Kompetenzen"
+}
+
 export interface CustomEvent {
     name: string;
-    semester: string;
     cp: number;
+    semester: string;
+    type: CustomEventType;
 }
 
 export const getEmptyConflict = (): Conflict => {

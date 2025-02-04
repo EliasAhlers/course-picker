@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Course, CourseType, Semester, CustomEvent } from './types';
+import { Course, CourseType, Semester, CustomEvent, CustomEventType } from './types';
 import { courses, removedCourseIds } from './courses';
 import CourseList from './components/CourseList/CourseList';
 import ProgressBar from './components/ProgressBar/ProgressBar';
@@ -9,6 +9,7 @@ import useLocalStorage from './hooks/useLocalStorage';
 import useConflictDetection from './hooks/useConflictDetection';
 import './App.css';
 import SemesterTable from './components/SemesterTable/SemesterTable';
+import CustomEventsTable from './components/CustomEventsTable/CustomEventsTable';
 
 const MAX_LECTURES = 11;
 
@@ -72,8 +73,12 @@ const App: React.FC = () => {
 
 
 	const totalCP = selectedCourseIds.map(courseId => courses.find(course => course.id === courseId)).filter(course => course?.type == CourseType.LECTURE || course?.type == CourseType.PRACTICAL).reduce((sum, course) => sum + course!.cp, 0);
-	const fmCP = selectedCourseIds.map(courseId => courses.find(course => course.id === courseId)).filter(course => course?.domain === "FM" && (course?.type == CourseType.LECTURE || course?.type == CourseType.PRACTICAL)).reduce((sum, course) => sum + course!.cp, 0);
-	const piCP = selectedCourseIds.map(courseId => courses.find(course => course.id === courseId)).filter(course => course?.domain === "PI" && (course?.type == CourseType.LECTURE || course?.type == CourseType.PRACTICAL)).reduce((sum, course) => sum + course!.cp, 0);
+	const fmCP = selectedCourseIds.map(courseId => courses.find(course => course.id === courseId)).filter(course => course?.domain === "FM" && (course?.type == CourseType.LECTURE || course?.type == CourseType.PRACTICAL)).reduce((sum, course) => sum + course!.cp, 0) +
+		customEvents.filter(event => event.type === CustomEventType.FM_LECTURE).reduce((sum, event) => sum + event.cp, 0);
+	const piCP = selectedCourseIds.map(courseId => courses.find(course => course.id === courseId)).filter(course => course?.domain === "PI" && (course?.type == CourseType.LECTURE || course?.type == CourseType.PRACTICAL)).reduce((sum, course) => sum + course!.cp, 0) +
+		customEvents.filter(event => event.type === CustomEventType.PI_LECTURE).reduce((sum, event) => sum + event.cp, 0);
+
+	const akCP = customEvents.filter(event => event.type === CustomEventType.GENERAL).reduce((sum, event) => sum + event.cp, 0);
 
 	const seminarySelected = selectedCourseIds.some(courseId => courses.find(course => course.id === courseId)?.type === CourseType.SEMINARY);
 	const projectSelected = selectedCourseIds.some(courseId => courses.find(course => course.id === courseId)?.type === CourseType.PROJECT);
@@ -93,12 +98,12 @@ const App: React.FC = () => {
 				<b>Hinweis:</b> Aktuell sind noch nicht alle Daten vorhanden, es fehlen noch einige Zeiten für das WiSe 24/25! Sobald ich diese weiß, trage ich sie nach.
 			</div> */}
 
-			{isMobile && (
+			{/* {isMobile && (
 				<div className="disclaimer attention">
-					{/* <b>Hinweis:</b> Obwohl diese Seite für Handys optimiert ist, empfehle ich die Nutzung auf einem größeren Bildschirm, da die Darstellung auf Handys nicht optimal ist. */}
+					<b>Hinweis:</b> Obwohl diese Seite für Handys optimiert ist, empfehle ich die Nutzung auf einem größeren Bildschirm, da die Darstellung auf Handys nicht optimal ist.
 					<b>Hinweis:</b> Durch das letzte Update ist die Darstellung am Handy an einigen Stellen kaputt, am besten einfach auf einem größeren Bildschirm nutzen.
 				</div>
-			)}
+			)} */}
 
 			<h2>
 				<span className="spacer">Stundenplan</span>
@@ -124,7 +129,7 @@ const App: React.FC = () => {
 				<thead>
 					<tr>
 						<th>Bedingungen (Bereich "Kerninformatik")</th>
-						<th>Bedingungen (Seminare & Masterarbeit)</th>
+						<th>Bedingungen (Sonstige)</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -140,6 +145,7 @@ const App: React.FC = () => {
 							Informatikseminar belegt: <span className={seminarySelected ? 'conditionMet' : 'conditionNotMet'} >{seminarySelected ? 'Ja' : 'Nein'}</span><br />
 							Projektseminar belegt:    <span className={projectSelected ? 'conditionMet' : 'conditionNotMet'} >{projectSelected ? 'Ja' : 'Nein'}</span><br />
 							Masterarbeit belegt:      <span className={thesisSelected ? 'conditionMet' : 'conditionNotMet'} >{thesisSelected ? 'Ja' : 'Nein'}</span>
+							<ProgressBar label="Zusatzkompetenzen CP" current={akCP} max={18} />
 						</td>
 					</tr>
 				</tbody>
@@ -152,6 +158,15 @@ const App: React.FC = () => {
 			<h2>CP pro Semester</h2>
 			<SemesterTable
 				selectedCourseIds={selectedCourseIds}
+				customEvents={customEvents}
+			/>
+
+			<h2>Eigene Veranstaltungen</h2>
+			<div className="disclaimer">
+				Hier können z.B. Zusatzkompetenzen oder andere Veranstaltungen eingetragen werden, die nicht in der Liste sind.
+				Diese werden nicht auf Konflikte überprüft, aber in die CP pro Semester eingerechnet.
+			</div>
+			<CustomEventsTable
 				customEvents={customEvents}
 				setCustomEvents={setCustomEvents}
 			/>

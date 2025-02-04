@@ -54,4 +54,6 @@ export const courses: Course[] = [
 	{ id: 300, type: CourseType.THESIS, name: "Masterarbeit", instructor: "", domain: "", semester: Semester.WiSe2526, cp: 30 },
 	// --- SoSe 26 ---
 	{ id: 400, type: CourseType.THESIS, name: "Masterarbeit", instructor: "", domain: "", semester: Semester.SoSe26, cp: 30 },
+	{ id: 470, type: CourseType.SEMINARY, name: "Informatikseminar SoSe 26", instructor: "", domain: "", semester: Semester.SoSe26, cp: 6 },
+	{ id: 471, type: CourseType.PROJECT, name: "Projektseminar SoSe 26", instructor: "", domain: "", semester: Semester.SoSe26, cp: 15 },
 ];
