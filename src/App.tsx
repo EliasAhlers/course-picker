@@ -10,6 +10,7 @@ import useConflictDetection from './hooks/useConflictDetection';
 import './App.css';
 import SemesterTable from './components/SemesterTable/SemesterTable';
 import CustomEventsTable from './components/CustomEventsTable/CustomEventsTable';
+import { SyncButton } from './components/SyncButton/SyncButton';
 
 const MAX_LECTURES = 11;
 
@@ -35,7 +36,7 @@ const App: React.FC = () => {
 	useEffect(() => {
 		// Handle migration of old localStorage data
 		const oldLocalData = localStorage.getItem('selectedCourses');
-		if(oldLocalData != null) {
+		if (oldLocalData != null) {
 			const oldSelectedCourses = JSON.parse(oldLocalData) as Course[];
 			const oldSelectedCourseIds = oldSelectedCourses.map(course => course.id);
 			setSelectedCourseIds(oldSelectedCourseIds);
@@ -91,8 +92,22 @@ const App: React.FC = () => {
 			<div className="disclaimer">
 				<b>Hinweis:</b> Ich übernehme keine Verantwortung für die Richtigkeit der Daten oder eventuelle Fehler! Besonders bei den CP bin ich mir nicht sicher, ob sie korrekt sind, einige sind Schätzungen. <b>Letztes Update: 31.01.2025</b>
 				<br /><br />
-				Alle Daten bleiben lokal im Browser gespeichert und werden nicht an einen Server gesendet. Beim Löschen des Browserspeichers für diese Seite gehen alle Daten verloren!
+				Alle Daten bleiben lokal im Browser gespeichert und werden nicht an einen Server gesendet. Beim Löschen des Browserspeichers für diese Seite gehen alle Daten verloren! <br></br>
+				<b>Ausnahme:</b> Wenn du die Sync-Funktion nutzt, werden deine Daten und zusätzliche personenbezogene Daten wie deine IP-Adresse auf einem Server gespeichert. Diese Daten werden nicht an Dritte weitergegeben und nur für die Sync-Funktion genutzt.
 			</div>
+
+			<SyncButton
+				data={{
+					selectedCourseIds,
+					customEvents,
+					showBachelorCourses
+				}}
+				onSync={(data) => {
+					setSelectedCourseIds(data.selectedCourseIds);
+					setCustomEvents(data.customEvents);
+					setShowBachelorCourses(data.showBachelorCourses);
+				}}
+			/>
 
 			{/* <div className="disclaimer">
 				<b>Hinweis:</b> Aktuell sind noch nicht alle Daten vorhanden, es fehlen noch einige Zeiten für das WiSe 24/25! Sobald ich diese weiß, trage ich sie nach.
@@ -209,7 +224,7 @@ const App: React.FC = () => {
 			/>
 
 			<footer className="copyright">
-				2025 Elias Ahlers - <a href="https://github.com/EliasAhlers/course-picker">GitHub</a> - <a href="https://ahlers.click/#impressum">Impressum</a>
+				2025 Elias-Leander Ahlers - <a href="https://github.com/EliasAhlers/course-picker">GitHub</a> - <a href="https://ahlers.click/#impressum">Impressum</a>
 			</footer>
 		</div>
 	);
