@@ -11,6 +11,7 @@ import './App.css';
 import SemesterTable from './components/SemesterTable/SemesterTable';
 import CustomEventsTable from './components/CustomEventsTable/CustomEventsTable';
 import { SyncButton } from './components/SyncButton/SyncButton';
+import { getMotd } from './utils/pocketbase';
 
 const MAX_LECTURES = 11;
 
@@ -26,6 +27,8 @@ const App: React.FC = () => {
 	const conflicts = useConflictDetection(selectedCourseIds, selectedSemester);
 
 	const [customEvents, setCustomEvents] = useLocalStorage<CustomEvent[]>('customEvents', []);
+
+	const [motd, setMotd] = useState<{text: string, attention: boolean}>({text: '', attention: false});
 
 	useEffect(() => {
 		const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -56,6 +59,14 @@ const App: React.FC = () => {
 		const lectureCount = selectedCourseIds.filter(courseId => courses.find(course => course.id === courseId)?.type != CourseType.LECTURE).length;
 		setMaxLecturesWarning(lectureCount > MAX_LECTURES);
 	}, [showBachelorCourses, selectedCourseIds]);
+
+	useEffect(() => {
+		getMotd().then((val) => {
+			if(val) {
+				setMotd(val);
+			}
+		});
+	}, []);
 
 	const handleCourseToggle = (course: Course) => {
 		setSelectedCourseIds(prev => {
@@ -112,6 +123,14 @@ const App: React.FC = () => {
 			{/* <div className="disclaimer">
 				<b>Hinweis:</b> Aktuell sind noch nicht alle Daten vorhanden, es fehlen noch einige Zeiten für das WiSe 24/25! Sobald ich diese weiß, trage ich sie nach.
 			</div> */}
+
+			{ 
+				motd.text != '' ? 
+				<div className={ 'disclaimer' +( motd.attention ? ' attention' : '') }>
+					{motd.text}
+				</div>
+				: ''
+			}
 
 			{/* {isMobile && (
 				<div className="disclaimer attention">
