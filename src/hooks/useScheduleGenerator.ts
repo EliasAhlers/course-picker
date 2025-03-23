@@ -6,9 +6,12 @@ const useScheduleGenerator = (selectedCourseIds: number[], selectedSemester: str
 	const [scheduleItems, setScheduleItems] = useState<ScheduleItem[]>([]);
 	const [uniqueTimes, setUniqueTimes] = useState<number[]>([]);
 	const [groupedScheduleItems, setGroupedScheduleItems] = useState<{ [key: string]: ScheduleItem[] }>({});
+	const [allCourses, setAllCourses] = useState<Course[]>([]);
 
 	useEffect(() => {
-		const selectedCourses = courses.filter(course => selectedCourseIds.includes(course.id));
+		const selectedCourses = courses.filter(course => selectedCourseIds.includes(course.id) && course.semester === selectedSemester);
+		setAllCourses(selectedCourses);
+
 		const newScheduleItems = generateSchedule(selectedCourses, selectedSemester);
 		setScheduleItems(newScheduleItems);
 
@@ -17,7 +20,7 @@ const useScheduleGenerator = (selectedCourseIds: number[], selectedSemester: str
 
 		const newGroupedScheduleItems = groupScheduleItemsByDay(newScheduleItems);
 		setGroupedScheduleItems(newGroupedScheduleItems);
-	}, [selectedCourseIds, selectedSemester]);
+	}, [selectedCourseIds, selectedSemester, courses]);
 
 	const generateSchedule = (courses: Course[], semester: string): ScheduleItem[] => {
 		const schedule: ScheduleItem[] = [];
@@ -54,7 +57,7 @@ const useScheduleGenerator = (selectedCourseIds: number[], selectedSemester: str
 		}, {} as { [key: string]: ScheduleItem[] });
 	};
 
-	return { scheduleItems, uniqueTimes, groupedScheduleItems };
+	return { scheduleItems, uniqueTimes, groupedScheduleItems, allCourses };
 };
 
 export default useScheduleGenerator;

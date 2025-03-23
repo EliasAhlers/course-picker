@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useScheduleGenerator from '../../hooks/useScheduleGenerator';
 import './Schedule.css';
-import { Semester } from '../../types';
+import { CourseType, Semester } from '../../types';
 
 interface ScheduleProps {
 	selectedCourseIds: number[];
@@ -10,9 +10,13 @@ interface ScheduleProps {
 }
 
 const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester, isMobile }) => {
-	const { scheduleItems, groupedScheduleItems } = useScheduleGenerator(selectedCourseIds, selectedSemester);
+	const { scheduleItems, groupedScheduleItems, allCourses } = useScheduleGenerator(selectedCourseIds, selectedSemester);
 
 	const [currentTimePosition, setCurrentTimePosition] = useState(0);
+
+	const coursesWithoutSchedule = allCourses.filter(course => {
+		return !scheduleItems.some(item => item.course.id === course.id);
+	}).filter(course => course.type == CourseType.LECTURE);
 
 	useEffect(() => {
 		const updateCurrentTimePosition = () => {
@@ -83,6 +87,17 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 
 	const weekDays = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
 
+	const renderCoursesWithoutSchedule = () => {
+		if (coursesWithoutSchedule.length === 0) return null;
+		
+		return (
+			<div className="courses-without-schedule">
+				<span>Folgende Kurse die ausgewählt wurden haben noch keinen Zeitplan zugewiesen bekommen: </span>
+				<span className='course' >{coursesWithoutSchedule.map(course => course.name).join(', ')}</span>
+			</div>
+		);
+	};
+
 	if (isMobile) {
 		const sortDaysFromToday = (days: string[]): string[] => {
 			const today = new Date().getDay();
@@ -123,6 +138,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 						))
 					)}
 				</div>
+				{renderCoursesWithoutSchedule()}
 			</>
 		);
 	}
@@ -196,6 +212,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 					</tbody>
 				</table>
 			</div>
+			{renderCoursesWithoutSchedule()}
 		</>
 	);
 };

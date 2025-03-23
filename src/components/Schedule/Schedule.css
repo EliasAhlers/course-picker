@@ -117,6 +117,10 @@
     .mobile-schedule {
         display: block;
     }
+
+    .courses-without-schedule {
+        margin-top: 15px;
+    }
 }
 
 .current-time-line {
@@ -126,4 +130,18 @@
     height: '2px';
     background-color: 'red';
     z-index: 1;
+}
+
+.courses-without-schedule {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.courses-without-schedule .course {
+    color: #333;
+    padding-right: 0.5em;
 }
