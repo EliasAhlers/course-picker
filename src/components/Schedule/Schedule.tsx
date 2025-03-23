@@ -92,7 +92,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 		
 		return (
 			<div className="courses-without-schedule">
-				<span>Folgende Kurse die ausgewählt wurden haben noch keinen Zeitplan zugewiesen bekommen: </span>
+				<span>Folgende Kurse die ausgewählt wurden, haben noch keinen Zeitplan zugewiesen bekommen: </span>
 				<span className='course' >{coursesWithoutSchedule.map(course => course.name).join(', ')}</span>
 			</div>
 		);

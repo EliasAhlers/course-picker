@@ -1,6 +1,7 @@
 import React from 'react';
 import { CustomEvent, CustomEventType, Semester } from '../../types';
 import './EditEventModal.css';
+import SemesterLabel from '../SemesterLabel/SemesterLabel';
 
 interface EditEventModalProps {
     event: CustomEvent | null;
@@ -44,7 +45,9 @@ export const EditEventModal: React.FC<EditEventModalProps> = ({ event, onSave, o
                     onChange={(e) => setSemester(e.target.value as Semester)}
                 >
                     {Object.values(Semester).map(sem => (
-                        <option key={sem} value={sem}>{sem}</option>
+                        <option key={sem} value={sem}>
+                            <SemesterLabel semester={sem} />
+                        </option>
                     ))}
                 </select>
                 <div className="modal-actions">
