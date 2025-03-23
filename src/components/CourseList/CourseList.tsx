@@ -5,6 +5,7 @@ import './CourseList.css';
 interface CourseListProps {
 	courses: Course[];
 	selectedCourseIds: number[];
+	semesterFilter: string;
 	showBachelorCourses: boolean;
 	onCourseToggle: (course: Course) => void;
 	conflicts: Conflict[];
@@ -13,6 +14,7 @@ interface CourseListProps {
 const CourseList: React.FC<CourseListProps> = ({
 	courses,
 	selectedCourseIds,
+	semesterFilter,
 	showBachelorCourses,
 	onCourseToggle,
 	conflicts
@@ -60,7 +62,7 @@ const CourseList: React.FC<CourseListProps> = ({
 				</thead>
 				<tbody>
 					{courses
-						.filter(course => showBachelorCourses || !course.bachelor)
+						.filter(course => (showBachelorCourses || !course.bachelor) && (semesterFilter === 'all' || course.semester === semesterFilter))
 						.map(course => (
 							<tr key={course.id} className={`
                 ${course.domain} 
