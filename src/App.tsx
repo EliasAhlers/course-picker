@@ -24,7 +24,7 @@ const App: React.FC = () => {
 	const [hiddenBachelorWarning, setHiddenBachelorWarning] = useState<boolean>(false);
 	const [maxLecturesWarning, setMaxLecturesWarning] = useState<boolean>(false);
 
-	const conflicts = useConflictDetection(selectedCourseIds, selectedSemester);
+	const conflicts = useConflictDetection(selectedCourseIds);
 
 	const [customEvents, setCustomEvents] = useLocalStorage<CustomEvent[]>('customEvents', []);
 
