@@ -32,7 +32,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 		return () => clearInterval(interval);
 	}, []);
 
-	if (selectedSemester !== Semester.WiSe2425) {
+	if (selectedSemester !== Semester.WiSe2425 && selectedSemester !== Semester.SoSe25) {
 		return (
 			<div className="disclaimer">
 				<b>Hinweis:</b> Für das Semester {selectedSemester} sind noch keine Zeiten vorhanden, daher kann kein Stundenplan angezeigt werden.
@@ -45,7 +45,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 		const currentHour = now.getHours();
 		const currentDay = now.toLocaleDateString('de-DE', { weekday: 'short' });
 
-		const nextEvent = scheduleItems.find(item => item.day === currentDay && item.start > currentHour - 2);
+		const nextEvent = scheduleItems.filter((item) => item.course.semester == selectedSemester).find(item => item.day === currentDay && item.start > currentHour - 2);
 
 		const roomOptions: boolean = nextEvent?.course.room ? nextEvent.course.room.includes('/') : false;
 

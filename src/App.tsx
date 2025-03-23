@@ -17,7 +17,7 @@ const MAX_LECTURES = 11;
 
 const App: React.FC = () => {
 	const [selectedCourseIds, setSelectedCourseIds] = useLocalStorage<number[]>('selectedCourseIds', []);
-	const [selectedSemester, setSelectedSemester] = useState<string>(Semester.WiSe2425);
+	const [selectedSemester, setSelectedSemester] = useState<string>(Semester.SoSe25);
 	const [showBachelorCourses, setShowBachelorCourses] = useLocalStorage<boolean>('showBachelorCourses', false);
 	const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
 
@@ -146,9 +146,13 @@ const App: React.FC = () => {
 					onChange={(e) => setSelectedSemester(e.target.value)}
 				>
 					{
-						Object.keys(Semester).map((key) => (
-							<option key={key} value={key}>{Semester[key as keyof typeof Semester]}</option>
-						))
+						Object.keys(Semester).map((key) => {
+							console.log(key, selectedSemester);
+							return <option key={key} value={key}>{Semester[key as keyof typeof Semester]}</option>
+						})
+						// Object.keys(Semester).map((key) => (
+						// 	<option key={key} value={key} selected={key === Semester[key as keyof typeof Semester]}>{Semester[key as keyof typeof Semester]}</option>
+						// ))
 					}
 				</select>
 			</h2>

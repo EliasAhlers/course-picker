@@ -68,20 +68,20 @@
     color: white;
 }
 
-.semester-WiSe-24-25 {
-    background-color: #a8e6cf;
+.semester-WiSe2425 {
+    background-color: #a8e6cf !important;
 }
 
-.semester-SoSe-25 {
-    background-color: #ffd3b6;
+.semester-SoSe25 {
+    background-color: #ffd3b6 !important;
 }
 
-.semester-WiSe-25-26 {
-    background-color: #ffaaa5;
+.semester-WiSe2526 {
+    background-color: #ffaaa5 !important; 
 }
 
-.semester-SoSe-26 {
-    background-color: #a5bbff;
+.semester-SoSe26 {
+    background-color: #a5bbff !important;
 }
 
 .bachelor-badge {

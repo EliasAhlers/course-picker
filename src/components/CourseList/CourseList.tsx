@@ -42,11 +42,6 @@ const CourseList: React.FC<CourseListProps> = ({
 		return !course.dependsOn || !selectedCourseIds.includes(course.dependsOn);
 	};
 
-	const getSemesterClass = (semester: string): string => {
-		const cleanSemester = semester.replace(/\s/g, '-').replace('/', '-');
-		return `semester-${cleanSemester}`;
-	};
-
 	return (
 		<div className="table-container">
 			<table className="responsive-table">
@@ -97,7 +92,7 @@ const CourseList: React.FC<CourseListProps> = ({
 								<td data-label="Dozent" className="instructor">{course.instructor}</td>
 								<td data-label="Bereich"><span className="domain-badge">{course.domain}</span></td>
 								<td data-label="Semester">
-									<span className={`semester-badge ${getSemesterClass(course.semester)}`}>
+									<span className={`semester-badge ${'semester-' + course.semester}`}>
 										{course.semester}
 									</span>
 								</td>
