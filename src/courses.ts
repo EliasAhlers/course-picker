@@ -38,7 +38,7 @@ export const courses: Course[] = [
 	{ id: 103, type: CourseType.PROJECT, name: "Projektseminar SoSe 25", instructor: "", domain: "", semester: Semester.SoSe25, cp: 15 },
 	{ id: 200, type: CourseType.THESIS, name: "Masterarbeit", instructor: "", domain: "", semester: Semester.SoSe25, cp: 30 },
 	// --- WiSe 25/26 ---
-	{ id: 16, type: CourseType.LECTURE, name: "Computer Vision", instructor: "Jiang", domain: "PI", semester: Semester.WiSe2526, cp: 9 },
+	{ id: 16, type: CourseType.LECTURE, name: "Computer Vision", instructor: "Jiang", domain: "PI", semester: Semester.WiSe2526, cp: 6 },
 	{ id: 108, type: CourseType.PRACTICAL, name: "Computer Vision Praktikum", instructor: "Jiang", domain: "PI", semester: Semester.WiSe2526, cp: 3, dependsOn: 16 },
 	{ id: 17, type: CourseType.LECTURE, name: "Deep Reinforcement Learning", instructor: "Schilling", domain: "PI", semester: Semester.WiSe2526, cp: 6 },
 	{ id: 109, type: CourseType.PRACTICAL, name: "Deep Reinforcement Learning Praktikum", instructor: "Schilling", domain: "PI", semester: Semester.WiSe2526, cp: 3, dependsOn: 17 },
