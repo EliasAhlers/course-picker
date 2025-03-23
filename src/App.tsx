@@ -12,6 +12,7 @@ import SemesterTable from './components/SemesterTable/SemesterTable';
 import CustomEventsTable from './components/CustomEventsTable/CustomEventsTable';
 import { SyncButton } from './components/SyncButton/SyncButton';
 import { getMotd } from './utils/pocketbase';
+import SemesterLabel from './components/SemesterLabel/SemesterLabel';
 
 const MAX_LECTURES = 11;
 
@@ -148,7 +149,9 @@ const App: React.FC = () => {
 				>
 					{
 						Object.keys(Semester).map((key) => (
-							<option key={key} value={key} selected={key === Semester[key as keyof typeof Semester]}>{Semester[key as keyof typeof Semester]}</option>
+							<option key={key} value={key} selected={key === Semester[key as keyof typeof Semester]}>
+								<SemesterLabel semester={key} />
+							</option>
 						))
 					}
 				</select>
@@ -215,14 +218,16 @@ const App: React.FC = () => {
 
 			<h2>Verfügbare Veranstaltungen</h2>
 			<div className="controls">
-				<span>Semester:</span>
+				<span style={{paddingRight: '0.25em'}}>Semester:</span>
 				<select
 					value={selectedSemesterList}
 					onChange={(e) => setSelectedSemesterList(e.target.value)}
 				>
 					{
 						Object.keys(Semester).map((key) => (
-							<option key={key} value={key} selected={key === Semester[key as keyof typeof Semester]}>{Semester[key as keyof typeof Semester]}</option>
+							<option key={key} value={key} selected={key === Semester[key as keyof typeof Semester]}>
+								<SemesterLabel semester={key} />
+							</option>
 						))
 					}
 					<option value="all">Alle Semester</option>

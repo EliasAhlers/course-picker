@@ -1,5 +1,6 @@
 import React from 'react';
-import { Course, Conflict, CourseType } from '../../types';
+import { Conflict, Course, CourseType } from '../../types';
+import SemesterLabel from '../SemesterLabel/SemesterLabel';
 import './CourseList.css';
 
 interface CourseListProps {
@@ -95,7 +96,7 @@ const CourseList: React.FC<CourseListProps> = ({
 								<td data-label="Bereich"><span className="domain-badge">{course.domain}</span></td>
 								<td data-label="Semester">
 									<span className={`semester-badge ${'semester-' + course.semester}`}>
-										{course.semester}
+									<SemesterLabel semester={course.semester} />
 									</span>
 								</td>
 								<td data-label="CP">{course.cp}</td>

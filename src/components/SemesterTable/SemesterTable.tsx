@@ -2,6 +2,7 @@ import React from 'react';
 import { courses } from '../../courses';
 import { CourseType, CustomEvent, Semester } from '../../types';
 import './SemesterTable.css';
+import SemesterLabel from '../SemesterLabel/SemesterLabel';
 
 interface SemesterTableProps {
     selectedCourseIds: number[];
@@ -47,7 +48,7 @@ const SemesterTable: React.FC<SemesterTableProps> = ({ selectedCourseIds, custom
                     {
                         Object.keys(Semester).map((key) => (
                             <tr key={key}>
-                                <td>{Semester[key as keyof typeof Semester]}</td>
+                                <td><SemesterLabel semester={key} /></td>
                                 <td>{calculateCP(Semester[key as keyof typeof Semester])}</td>
                                 <td>{renderBadges(Semester[key as keyof typeof Semester])}</td>
                             </tr>
