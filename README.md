@@ -14,8 +14,12 @@ This React-based web application helps students at the University of Münster se
 ## Development
 This project is built using React and TypeScript. To run it locally:
 
-1. Run `npm install` to install dependencies
-2. Use `npm start` to run the app
+1. Run `bun install` to install dependencies
+2. Use `bun run dev` to run the app
+
+### Building & Deployment
+To build the app for production, run `bun run build`. This will create a `dist` folder with the compiled files.
+I also have a deployment script that uses scp to prepare my server and deploy the app. You can use it via `bun run deploy`.
 
 ## Disclaimer
 This tool is for planning purposes only. The accuracy of course data is not guaranteed, and users should verify all information with official university sources.
@@ -25,4 +29,4 @@ The code in this repo is licensed under the MIT License.
 
 To view a copy of this license, visit: https://opensource.org/licenses/MIT
 
-Elias Ahlers, 2024
+Elias-Leander Ahlers, 2025
