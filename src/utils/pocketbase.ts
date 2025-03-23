@@ -16,6 +16,10 @@ export const getData = async (id: string) => {
 	return await pb.collection('course_selections').getOne(id);
 };
 
+let motdCache: string | null = null;
+
 export const getMotd = async () => {
-	return (await pb.collection('app_data').getOne('course_picker')).data.motd;
+	if (motdCache) return motdCache;
+	motdCache = (await pb.collection('app_data').getOne('course_picker')).data.motd;
+	return motdCache;
 }
