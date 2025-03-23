@@ -101,7 +101,7 @@ const App: React.FC = () => {
 			<h1>Vorlesungsauswahl-Tool für den Informatik Master Uni Münster</h1>
 
 			<div className="disclaimer">
-				<b>Hinweis:</b> Ich übernehme keine Verantwortung für die Richtigkeit der Daten oder eventuelle Fehler! Besonders bei den CP bin ich mir nicht sicher, ob sie korrekt sind, einige sind Schätzungen. <b>Letztes Update: 31.01.2025</b>
+				<b>Hinweis:</b> Ich übernehme keine Verantwortung für die Richtigkeit der Daten oder eventuelle Fehler! Besonders bei den CP bin ich mir nicht sicher, ob sie korrekt sind, einige sind Schätzungen. <b>Letztes Update: 23.03.2025</b>
 				<br /><br />
 				Alle Daten bleiben lokal im Browser gespeichert und werden nicht an einen Server gesendet. Beim Löschen des Browserspeichers für diese Seite gehen alle Daten verloren! <br></br>
 				<b>Ausnahme:</b> Wenn du die Sync-Funktion nutzt, werden deine Daten und zusätzliche personenbezogene Daten wie deine IP-Adresse auf einem Server gespeichert. Diese Daten werden nicht an Dritte weitergegeben und nur für die Sync-Funktion genutzt.

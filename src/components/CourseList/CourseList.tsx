@@ -97,12 +97,12 @@ const CourseList: React.FC<CourseListProps> = ({
 									</span>
 								</td>
 								<td data-label="CP">{course.cp}</td>
-								<td data-label="Raum">{course.room || ''}</td>
+								<td data-label="Raum">{course.type != CourseType.PROJECT && course.type != CourseType.SEMINARY && course.type != CourseType.THESIS ? (course.room || '?') : '/'}</td>
 								<td data-label="Zeit">
-									<div className='course-time'>{course.type != CourseType.THESIS ? (course.schedule || '?') : '/'}</div>
+									<div className='course-time'>{course.type != CourseType.PROJECT && course.type != CourseType.SEMINARY && course.type != CourseType.THESIS ? (course.schedule || '?') : '/'}</div>
 								</td>
 								<td data-label="Übung">
-									<div className='course-time'>{course.type != CourseType.PRACTICAL && course.type != CourseType.PROJECT && course.type != CourseType.SEMINARY && course.type != CourseType.THESIS ? (course.tutorial || '?') : '/'}</div>
+									<div className='course-time'>{course.type != CourseType.PROJECT && course.type != CourseType.SEMINARY && course.type != CourseType.THESIS ? (course.tutorial || '?') : '/'}</div>
 								</td>
 							</tr>
 						))}
