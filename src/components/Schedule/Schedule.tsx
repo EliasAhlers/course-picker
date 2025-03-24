@@ -144,6 +144,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 	}
 
 	const timeSlots = [
+		{ start: 8, end: 10 },
 		{ start: 10, end: 12 },
 		{ start: 12, end: 14 },
 		{ start: 14, end: 16 },

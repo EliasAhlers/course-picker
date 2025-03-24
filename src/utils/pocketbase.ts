@@ -16,7 +16,7 @@ export const getData = async (id: string) => {
 	return await pb.collection('course_selections').getOne(id);
 };
 
-let motdCache: string | null = null;
+let motdCache: {text: string, attention: boolean} | null = null;
 
 export const getMotd = async () => {
 	if (motdCache) return motdCache;
