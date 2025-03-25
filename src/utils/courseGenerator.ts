@@ -30,6 +30,8 @@ export const generateCoursesFile = (courses: Course[], removedCourseIds: number[
 
 		fileContent += `\t// ====================== ${semester} ======================\n`;
 
+		coursesBySemester[semester].sort((a, b) => -1*a.domain.localeCompare(b.domain));
+
 		coursesBySemester[semester].forEach(course => {
 			const courseTypeFormatted = course.type.toUpperCase();
 
