@@ -307,6 +307,25 @@ input[type="checkbox"] {
 	cursor: pointer;
 }
 
+.app-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.edit-courses-button {
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-courses-button:hover {
+  background-color: #45a049;
+}
+
 @media (max-width: 768px) {
 	.App {
 		padding: 10px;

@@ -13,6 +13,7 @@ import CustomEventsTable from './components/CustomEventsTable/CustomEventsTable'
 import { SyncButton } from './components/SyncButton/SyncButton';
 import { getMotd } from './utils/pocketbase';
 import SemesterLabel from './components/SemesterLabel/SemesterLabel';
+import CourseEditor from './components/CourseEditor/CourseEditor';
 
 const MAX_LECTURES = 11;
 
@@ -31,6 +32,9 @@ const App: React.FC = () => {
 	const [customEvents, setCustomEvents] = useLocalStorage<CustomEvent[]>('customEvents', []);
 
 	const [motd, setMotd] = useState<{text: string, attention: boolean}>({text: '', attention: false});
+	const [showCourseEditor, setShowCourseEditor] = useState<boolean>(false);
+
+	const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
 	useEffect(() => {
 		const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -109,22 +113,29 @@ const App: React.FC = () => {
 				<b>Ausnahme:</b> Wenn du die Sync-Funktion nutzt, werden deine Daten und zusätzliche personenbezogene Daten wie deine IP-Adresse auf einem Server gespeichert. Diese Daten werden nicht an Dritte weitergegeben und nur für die Sync-Funktion genutzt.
 			</div>
 
-			<SyncButton
-				data={{
-					selectedCourseIds,
-					customEvents,
-					showBachelorCourses
-				}}
-				onSync={(data) => {
-					setSelectedCourseIds(data.selectedCourseIds);
-					setCustomEvents(data.customEvents);
-					setShowBachelorCourses(data.showBachelorCourses);
-				}}
-			/>
-
-			{/* <div className="disclaimer">
-				<b>Hinweis:</b> Aktuell sind noch nicht alle Daten vorhanden, es fehlen noch einige Zeiten für das WiSe 24/25! Sobald ich diese weiß, trage ich sie nach.
-			</div> */}
+			<div className="app-controls">
+				<SyncButton
+					data={{
+						selectedCourseIds,
+						customEvents,
+						showBachelorCourses
+					}}
+					onSync={(data) => {
+						setSelectedCourseIds(data.selectedCourseIds);
+						setCustomEvents(data.customEvents);
+						setShowBachelorCourses(data.showBachelorCourses);
+					}}
+				/>
+				{isLocalhost && (
+					<button 
+						className="edit-courses-button" 
+						onClick={() => setShowCourseEditor(true)}
+						title="Veranstaltungsdaten bearbeiten"
+					>
+						Veranstaltungen bearbeiten
+					</button>
+				)}
+			</div>
 
 			{ 
 				motd.text != '' ? 
@@ -133,13 +144,6 @@ const App: React.FC = () => {
 				</div>
 				: ''
 			}
-
-			{/* {isMobile && (
-				<div className="disclaimer attention">
-					<b>Hinweis:</b> Obwohl diese Seite für Handys optimiert ist, empfehle ich die Nutzung auf einem größeren Bildschirm, da die Darstellung auf Handys nicht optimal ist.
-					<b>Hinweis:</b> Durch das letzte Update ist die Darstellung am Handy an einigen Stellen kaputt, am besten einfach auf einem größeren Bildschirm nutzen.
-				</div>
-			)} */}
 
 			<h2>
 				<span className="spacer">Stundenplan</span>
@@ -173,13 +177,11 @@ const App: React.FC = () => {
 				<tbody>
 					<tr>
 						<td>
-							{/* <h2>Bedingungen (Bereich "Kerninformatik")</h2> */}
 							<ProgressBar label="Gesamte CP" current={totalCP} max={51} />
 							<ProgressBar label="Formale Methoden CP" current={fmCP} max={15} />
 							<ProgressBar label="Praktische Informatik CP" current={piCP} max={15} />
 						</td>
 						<td className='align-top'>
-							{/* <h2>Bedingungen (Seminare)</h2> */}
 							Informatikseminar belegt: <span className={seminarySelected ? 'conditionMet' : 'conditionNotMet'} >{seminarySelected ? 'Ja' : 'Nein'}</span><br />
 							Projektseminar belegt:    <span className={projectSelected ? 'conditionMet' : 'conditionNotMet'} >{projectSelected ? 'Ja' : 'Nein'}</span><br />
 							Masterarbeit belegt:      <span className={thesisSelected ? 'conditionMet' : 'conditionNotMet'} >{thesisSelected ? 'Ja' : 'Nein'}</span>
@@ -188,8 +190,6 @@ const App: React.FC = () => {
 					</tr>
 				</tbody>
 			</table>
-
-
 
 			<ConflictWarning conflicts={conflicts} courses={courses} />
 
@@ -208,7 +208,6 @@ const App: React.FC = () => {
 				customEvents={customEvents}
 				setCustomEvents={setCustomEvents}
 			/>
-
 
 			{maxLecturesWarning && (
 				<div className="warning">
@@ -259,6 +258,11 @@ const App: React.FC = () => {
 				semesterFilter={selectedSemesterList}
 				onCourseToggle={handleCourseToggle}
 				conflicts={conflicts}
+			/>
+
+			<CourseEditor 
+				isOpen={showCourseEditor} 
+				onClose={() => setShowCourseEditor(false)} 
 			/>
 
 			<footer className="copyright">
