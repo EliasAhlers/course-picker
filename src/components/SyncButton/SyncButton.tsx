@@ -73,6 +73,10 @@ export const SyncButton = ({ data, onSync }: SyncButtonProps) => {
 	};
 
 	const handleGetId = () => {
+		if (!syncId) {
+			alert('Keine Sync ID gespeichert');
+			return;
+		}
 		alert(`Deine sync ID ist: ${syncId}`);
 	};
 
@@ -99,6 +103,9 @@ export const SyncButton = ({ data, onSync }: SyncButtonProps) => {
 			>
 				Sync ID anzeigen
 			</button>
+			{/* <span className="sync-id">
+				{syncId ? `Aktuelle Sync ID: ${syncId}` : 'Keine Sync ID gespeichert'}
+			</span> */}
 
 		</div>
 	);

@@ -113,19 +113,19 @@ const App: React.FC = () => {
 				<b>Ausnahme:</b> Wenn du die Sync-Funktion nutzt, werden deine Daten und zusätzliche personenbezogene Daten wie deine IP-Adresse auf einem Server gespeichert. Diese Daten werden nicht an Dritte weitergegeben und nur für die Sync-Funktion genutzt.
 			</div>
 
+			<SyncButton
+				data={{
+					selectedCourseIds,
+					customEvents,
+					showBachelorCourses
+				}}
+				onSync={(data) => {
+					setSelectedCourseIds(data.selectedCourseIds);
+					setCustomEvents(data.customEvents);
+					setShowBachelorCourses(data.showBachelorCourses);
+				}}
+			/>
 			<div className="app-controls">
-				<SyncButton
-					data={{
-						selectedCourseIds,
-						customEvents,
-						showBachelorCourses
-					}}
-					onSync={(data) => {
-						setSelectedCourseIds(data.selectedCourseIds);
-						setCustomEvents(data.customEvents);
-						setShowBachelorCourses(data.showBachelorCourses);
-					}}
-				/>
 				{isLocalhost && (
 					<button 
 						className="edit-courses-button" 
