@@ -30,9 +30,10 @@ interface SyncButtonProps {
 		showBachelorCourses: boolean;
 	};
 	onSync: (data: any) => void;
+	onChangelogClick: () => void;
 }
 
-export const SyncButton = ({ data, onSync }: SyncButtonProps) => {
+export const SyncButton = ({ data, onSync, onChangelogClick }: SyncButtonProps) => {
 	const [syncId, setSyncId] = useState(localStorage.getItem('sync_id') || '');
 	const [isSyncing, setIsSyncing] = useState(false);
 
@@ -82,31 +83,36 @@ export const SyncButton = ({ data, onSync }: SyncButtonProps) => {
 
 	return (
 		<div className="sync-container">
-			<button
-				onClick={handleSync}
-				disabled={isSyncing}
-				className="sync-button"
-			>
-				{isSyncing ? 'Sync...' : 'In Cloud speichern'}
-			</button>
-			<button
-				onClick={handleLoad}
-				disabled={isSyncing}
-				className="sync-button"
-			>
-				Aus Cloud laden
-			</button>
-			<button
-				onClick={handleGetId}
-				disabled={isSyncing}
-				className="sync-button"
-			>
-				Sync ID anzeigen
-			</button>
-			{/* <span className="sync-id">
-				{syncId ? `Aktuelle Sync ID: ${syncId}` : 'Keine Sync ID gespeichert'}
-			</span> */}
-
+			<div className="sync-buttons-group">
+				<button
+					onClick={handleSync}
+					disabled={isSyncing}
+					className="sync-button"
+				>
+					{isSyncing ? 'Sync...' : 'In Cloud speichern'}
+				</button>
+				<button
+					onClick={handleLoad}
+					disabled={isSyncing}
+					className="sync-button"
+				>
+					Aus Cloud laden
+				</button>
+				<button
+					onClick={handleGetId}
+					disabled={isSyncing}
+					className="sync-button"
+				>
+					Sync ID anzeigen
+				</button>
+				<button
+					onClick={onChangelogClick}
+					className="sync-button changelog-button"
+					title="Changelog anzeigen"
+				>
+					<span className="changelog-icon">📋</span> Changelog
+				</button>
+			</div>
 		</div>
 	);
 };

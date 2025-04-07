@@ -313,17 +313,29 @@ input[type="checkbox"] {
   margin-bottom: 15px;
 }
 
-.edit-courses-button {
+.edit-courses-button, 
+.changelog-button {
   padding: 8px 16px;
-  background-color: #4CAF50;
-  color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  color: white;
+}
+
+.edit-courses-button {
+  background-color: #4CAF50;
 }
 
 .edit-courses-button:hover {
   background-color: #45a049;
+}
+
+.changelog-button {
+  background-color: #3498db;
+}
+
+.changelog-button:hover {
+  background-color: #2980b9;
 }
 
 @media (max-width: 768px) {

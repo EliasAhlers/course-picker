@@ -14,6 +14,7 @@ import { SyncButton } from './components/SyncButton/SyncButton';
 import { getMotd } from './utils/pocketbase';
 import SemesterLabel from './components/SemesterLabel/SemesterLabel';
 import CourseEditor from './components/CourseEditor/CourseEditor';
+import Changelog from './components/Changelog/Changelog';
 
 const MAX_LECTURES = 11;
 
@@ -26,6 +27,7 @@ const App: React.FC = () => {
 
 	const [hiddenBachelorWarning, setHiddenBachelorWarning] = useState<boolean>(false);
 	const [maxLecturesWarning, setMaxLecturesWarning] = useState<boolean>(false);
+	const [showChangelog, setShowChangelog] = useState<boolean>(false);
 
 	const conflicts = useConflictDetection(selectedCourseIds);
 
@@ -123,7 +125,8 @@ const App: React.FC = () => {
 					setSelectedCourseIds(data.selectedCourseIds);
 					setCustomEvents(data.customEvents);
 					setShowBachelorCourses(data.showBachelorCourses);
-				}}
+					}}
+				onChangelogClick={() => setShowChangelog(true)}
 			/>
 			<div className="app-controls">
 				{isLocalhost && (
@@ -264,6 +267,11 @@ const App: React.FC = () => {
 			<CourseEditor 
 				isOpen={showCourseEditor} 
 				onClose={() => setShowCourseEditor(false)} 
+			/>
+			
+			<Changelog
+				isOpen={showChangelog}
+				onClose={() => setShowChangelog(false)}
 			/>
 
 			<footer className="copyright">
