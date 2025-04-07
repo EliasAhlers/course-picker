@@ -3,7 +3,7 @@ import { Course, CourseType, Semester } from "./types";
 export const removedCourseIds: number[] = [
 	9,
 	23,
-	28,
+	28
 ];
 
 export const courses: Course[] = [
@@ -26,12 +26,13 @@ export const courses: Course[] = [
 	{ id: 12, type: CourseType.LECTURE, name: "Visual Analytics", instructor: "Linsen", domain: "PI", semester: Semester.SoSe25, cp: 6, schedule: "Mo 12-14", tutorial: "Do 12-14", room: "M6/M6" },
 	{ id: 21, type: CourseType.LECTURE, name: "Computernetze und ihre Leistung", instructor: "Holz", domain: "PI", semester: Semester.SoSe25, cp: 6, schedule: "Mo 12-14", tutorial: "Mi 12-14", room: "M1/M2", bachelor: true },
 	{ id: 22, type: CourseType.LECTURE, name: "Einführung in die Computergrafik", instructor: "Linsen", domain: "PI", semester: Semester.SoSe25, cp: 6, schedule: "Di 10-12, Fr 10-12", room: "M6", bachelor: true },
-	{ id: 107, type: CourseType.LECTURE, name: "Network and System Security", instructor: "Holz", domain: "PI", semester: Semester.SoSe25, cp: 9, schedule: "Mo 10-12, Do 10-12", room: "M5" },
+	{ id: 107, type: CourseType.LECTURE, name: "Network and System Security", instructor: "Holz", domain: "PI", semester: Semester.SoSe25, cp: 9, schedule: "Mo 10-12, Do 10-12", tutorial: "Do 12-14", room: "M5" },
 	{ id: 8, type: CourseType.LECTURE, name: "Theorie der Programmierung", instructor: "Müller-Olm", domain: "FM", semester: Semester.SoSe25, cp: 9, schedule: "Mo 10-12, Do 10-12", tutorial: "Mi 10-12", room: "M6/M6" },
-	{ id: 10, type: CourseType.LECTURE, name: "Einführung in Quantitatives Model Checking", instructor: "Remke", domain: "FM", semester: Semester.SoSe25, cp: 6, schedule: "Di 14-16, Fr 14-16", room: "M1/M1", bachelor: true },
+	{ id: 10, type: CourseType.LECTURE, name: "Einführung in Quantitatives Model Checking", instructor: "Remke", domain: "FM", semester: Semester.SoSe25, cp: 6, schedule: "Di 14-16, Do 14-16", room: "M1/M1", bachelor: true },
 	{ id: 20, type: CourseType.LECTURE, name: "Effiziente Algorithmen", instructor: "Vahrenhold", domain: "FM", semester: Semester.SoSe25, cp: 6, schedule: "Di 12-14, Fr 12-14", tutorial: "Fr 12-14", room: "M4/M4", bachelor: true },
 	{ id: 24, type: CourseType.LECTURE, name: "Compilerbau", instructor: "Lammers", domain: "FM", semester: Semester.SoSe25, cp: 6, schedule: "Mo 8-10, Do 8-10", room: "M5", bachelor: true },
 	{ id: 106, type: CourseType.LECTURE, name: "Mustererkennung", instructor: "Jiang", domain: "FM", semester: Semester.SoSe25, cp: 6, schedule: "Mi 14-16, Fr 10-12", room: "M3", bachelor: true },
+	{ id: 170, type: CourseType.PRACTICAL, name: "Mustererkennung Praktikum", instructor: "Jiang", domain: "FM", semester: Semester.SoSe25, cp: 3, dependsOn: 106 },
 	{ id: 102, type: CourseType.SEMINARY, name: "Informatikseminar SoSe 25", instructor: "", domain: "", semester: Semester.SoSe25, cp: 6 },
 	{ id: 103, type: CourseType.PROJECT, name: "Projektseminar SoSe 25", instructor: "", domain: "", semester: Semester.SoSe25, cp: 15 },
 	{ id: 200, type: CourseType.THESIS, name: "Masterarbeit", instructor: "", domain: "", semester: Semester.SoSe25, cp: 27 },
@@ -55,6 +56,14 @@ export const courses: Course[] = [
 	{ id: 301, type: CourseType.NONE, name: "Masterseminar", instructor: "", domain: "", semester: Semester.WiSe2526, cp: 3 },
 
 	// ====================== SoSe26 ======================
+	{ id: 423, type: CourseType.LECTURE, name: "Eingebettete Systeme", instructor: "Herber", domain: "PI", semester: Semester.SoSe26, cp: 6, bachelor: true },
+	{ id: 424, type: CourseType.LECTURE, name: "Computernetze und ihre Leistung", instructor: "Holz", domain: "PI", semester: Semester.SoSe26, cp: 6, bachelor: true },
+	{ id: 425, type: CourseType.LECTURE, name: "Autonome Systeme", instructor: "Schilling", domain: "PI", semester: Semester.SoSe26, cp: 6, bachelor: true },
+	{ id: 420, type: CourseType.LECTURE, name: "Compilerbau", instructor: "Lammers", domain: "FM", semester: Semester.SoSe26, cp: 6, bachelor: true },
+	{ id: 421, type: CourseType.LECTURE, name: "Mustererkennung", instructor: "Jiang", domain: "FM", semester: Semester.SoSe26, cp: 6, bachelor: true },
+	{ id: 422, type: CourseType.PRACTICAL, name: "Mustererkennung Praktikum", instructor: "Jiang", domain: "FM", semester: Semester.SoSe26, cp: 3, dependsOn: 421 },
+	{ id: 426, type: CourseType.LECTURE, name: "Komplexitätstheorie", instructor: "Müller-Olm", domain: "FM", semester: Semester.SoSe26, cp: 9 },
+	{ id: 427, type: CourseType.LECTURE, name: "Simulation und statistisches Model Checking", instructor: "Dr. da Silva", domain: "FM", semester: Semester.SoSe26, cp: 6 },
 	{ id: 400, type: CourseType.THESIS, name: "Masterarbeit", instructor: "", domain: "", semester: Semester.SoSe26, cp: 27 },
 	{ id: 401, type: CourseType.NONE, name: "Masterseminar", instructor: "", domain: "", semester: Semester.SoSe26, cp: 3 },
 	{ id: 470, type: CourseType.SEMINARY, name: "Informatikseminar SoSe 26", instructor: "", domain: "", semester: Semester.SoSe26, cp: 6 },
