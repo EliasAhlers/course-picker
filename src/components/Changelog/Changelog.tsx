@@ -17,45 +17,45 @@ const Changelog: React.FC<ChangelogProps> = ({ isOpen, onClose }) => {
                 <div className="changelog-section">
                     <h3>07. April 2025</h3>
                     <ul>
-                        <li>Changed sync button positioning</li>
-                        <li>Added schedule support for custom events</li>
-                        <li>Improved schedule rendering</li>
-                        <li>Added additional course data</li>
-                        <li>Added change log (lol)</li>
+                        <li>Position des Sync-Buttons geändert</li>
+                        <li>Zeitplanunterstützung für benutzerdefinierte Ereignisse hinzugefügt</li>
+                        <li>Zeitplanerstellung verbessert</li>
+                        <li>Zusätzliche Kursdaten hinzugefügt</li>
+                        <li>Changelog hinzugefügt (lol)</li>
                     </ul>
                 </div>
                 <div className="changelog-section">
                     <h3>25. März 2025</h3>
                     <ul>
-                        <li>Added course editor functionality</li>
-                        <li>Improved course data generation</li>
+                        <li>Kursbearbeitungsfunktion hinzugefügt</li>
+                        <li>Kursdatengenerierung verbessert</li>
                     </ul>
                 </div>
                 <div className="changelog-section">
                     <h3>23.-24. März 2025</h3>
                     <ul>
-                        <li>Updated course data and added important fixes</li>
-                        <li>Added cloud sync functionality</li>
-                        <li>Added semester filtering to course list</li>
-                        <li>Improved conflict detection</li>
-                        <li>Fixed various semester-related issues</li>
-                        <li>Added info for courses without schedules</li>
+                        <li>Kursdaten aktualisiert und fixes</li>
+                        <li>Cloud-Synchronisierung hinzugefügt</li>
+                        <li>Semesterfilterung zur Kursliste hinzugefügt</li>
+                        <li>Konflikterkennung verbessert</li>
+                        <li>Verschiedene semesterbezogene Probleme behoben</li>
+                        <li>Informationen für Kurse ohne Zeitplan hinzugefügt</li>
                     </ul>
                 </div>
                 <div className="changelog-section">
                     <h3>Februar 2025</h3>
                     <ul>
-                        <li>Added MOTD (Message of the Day) system</li>
-                        <li>Implemented server sync functionality</li>
-                        <li>Added custom events feature</li>
+                        <li>MOTD-System (<b>M</b>essage <b>O</b>f <b>T</b>he <b>D</b>ay) hinzugefügt</li>
+                        <li>Server-Synchronisierung implementiert</li>
+                        <li>Funktion für benutzerdefinierte Ereignisse hinzugefügt</li>
                     </ul>
                 </div>
                 <div className="changelog-section">
                     <h3>31. Januar 2025</h3>
                     <ul>
-                        <li>Added master thesis support</li>
-                        <li>Added custom events system</li>
-                        <li>Various improvements and fixes</li>
+                        <li>Unterstützung für Masterarbeiten hinzugefügt</li>
+                        <li>System für benutzerdefinierte Ereignisse hinzugefügt</li>
+                        <li>Verschiedene Verbesserungen und fixes</li>
                     </ul>
                 </div>
                 <div className="modal-actions">
