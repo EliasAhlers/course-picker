@@ -34,7 +34,7 @@ export const EditEventModal: React.FC<EditEventModalProps> = ({ event, onSave, o
                     type="number"
                     value={cp}
                     onChange={(e) => setCp(parseInt(e.target.value))}
-                    min="1"
+                    min="0"
                     max="30"
                 />
                 
@@ -71,7 +71,7 @@ export const EditEventModal: React.FC<EditEventModalProps> = ({ event, onSave, o
                 <div className="modal-actions">
                     <button onClick={onClose}>Abbrechen</button>
                     <button onClick={() => {
-                        if (name && cp) {
+                        if (name && (cp || cp == 0)) {
                             onSave({
                                 name,
                                 cp,

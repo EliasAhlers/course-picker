@@ -22,7 +22,7 @@ export const courses: Course[] = [
 	{ id: 101, type: CourseType.PROJECT, name: "Projektseminar WiSe 24/25", instructor: "", domain: "", semester: Semester.WiSe2425, cp: 15 },
 
 	// ====================== SoSe25 ======================
-	{ id: 11, type: CourseType.LECTURE, name: "Parallele Systeme", instructor: "Gorlatch", domain: "PI", semester: Semester.SoSe25, cp: 9, schedule: "Di 16-18, Do 16-18", tutorial: "Mi 10-11", room: "M3/M5" },
+	{ id: 11, type: CourseType.LECTURE, name: "Parallele Systeme", instructor: "Gorlatch", domain: "PI", semester: Semester.SoSe25, cp: 9, schedule: "Di 16-18, Do 16-18", tutorial: "Mi 10-12", room: "M3/M5" },
 	{ id: 12, type: CourseType.LECTURE, name: "Visual Analytics", instructor: "Linsen", domain: "PI", semester: Semester.SoSe25, cp: 6, schedule: "Mo 12-14", tutorial: "Do 12-14", room: "M6/M6" },
 	{ id: 21, type: CourseType.LECTURE, name: "Computernetze und ihre Leistung", instructor: "Holz", domain: "PI", semester: Semester.SoSe25, cp: 6, schedule: "Mo 12-14", tutorial: "Mi 12-14", room: "M1/M2", bachelor: true },
 	{ id: 22, type: CourseType.LECTURE, name: "Einführung in die Computergrafik", instructor: "Linsen", domain: "PI", semester: Semester.SoSe25, cp: 6, schedule: "Di 10-12, Fr 10-12", room: "M6", bachelor: true },

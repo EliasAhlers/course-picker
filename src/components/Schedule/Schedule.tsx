@@ -22,9 +22,9 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 	useEffect(() => {
 		const updateCurrentTimePosition = () => {
 			const now = new Date();
-			const currentHour = now.getHours();
-			if (currentHour >= 10 && currentHour <= 18) {
-				const position = ((currentHour - 10) / 8) * 100;
+			const currentHour = now.getHours() + (now.getMinutes() / 60);
+			if (currentHour >= 8 && currentHour <= 18) {
+				const position = ((currentHour - 8) / 10) * 100;
 				setCurrentTimePosition(position);
 			} else {
 				setCurrentTimePosition(-1);
@@ -47,7 +47,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 
 	const nextEventIndicator = () => {
 		const now = new Date();
-		const currentHour = now.getHours();
+		const currentHour = now.getHours() + (now.getMinutes() / 60);
 		const currentDay = now.toLocaleDateString('de-DE', { weekday: 'short' });
 
 		const nextEvent = scheduleItems.filter((item) => item.course.semester == selectedSemester).find(item => item.day === currentDay && item.start > currentHour - 2);
@@ -60,7 +60,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 				{nextEvent && (
 					<div className="next-event-indicator">
 						<p>
-							{(currentHour >= nextEvent.start && (currentHour < nextEvent.start + 2)) ? 'Aktueller' : 'Nächster'} Kurs: <b>{nextEvent.course.name}</b> um <b>{nextEvent.start}:00 Uhr</b>
+							{(currentHour >= nextEvent.start && (currentHour < nextEvent.end)) ? 'Aktueller' : 'Nächster'} Kurs: <b>{nextEvent.course.name}</b> um <b>{formatTime(nextEvent.start)} Uhr</b>
 							{nextEvent.course.room && (
 								<>
 									{roomOptions ? (
@@ -99,6 +99,43 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 		);
 	};
 
+	const formatTime = (time: number) => {
+		const hours = Math.floor(time);
+		const minutes = Math.round((time - hours) * 60);
+		return `${hours}:${minutes.toString().padStart(2, '0')}`;
+	};
+
+	const generateTimeSlots = () => {
+		const slots = [];
+		for (let hour = 8; hour < 18; hour++) {
+			slots.push({
+				start: hour,
+				end: hour + 1
+			});
+		}
+		return slots;
+	};
+
+	const getItemsForTimeSlot = (day: string, slotIndex: number) => {
+		const startHour = slotIndex + 8;
+		
+		return scheduleItems
+			.filter(item => item.day === day && 
+				item.start >= startHour && 
+				item.start < startHour + 1)
+			.map(item => {
+				const duration = item.end - item.start;
+				const rowSpan = Math.ceil(duration);
+				
+				return {
+					item,
+					rowSpan
+				};
+			});
+	};
+
+	const skipCells: { [key: string]: boolean } = {}; // track which cells should be skipped due to rowspan
+
 	if (isMobile) {
 		const sortDaysFromToday = (days: string[]): string[] => {
 			const today = new Date().getDay();
@@ -122,15 +159,23 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 						sortDaysFromToday(Object.keys(groupedScheduleItems)).map(day => (
 							<div key={day} className="mobile-schedule-day-group">
 								<h3>{day} {weekDays[new Date().getDay() - 1] == day ? '(Heute)' : ''}</h3>
-								{groupedScheduleItems[day].map((item, index) => (
+								{groupedScheduleItems[day]
+									.sort((a, b) => a.start - b.start)
+									.map((item, index) => (
 									<div key={index} className={`mobile-schedule-item ${item.isLecture ? 'lecture' : 'tutorial'}`}>
-										<div className="mobile-schedule-time">{`${item.start}:00 - ${item.end}:00`}</div>
+										<div className="mobile-schedule-time">{`${formatTime(item.start)} - ${formatTime(item.end)}`}</div>
 										<div className="mobile-schedule-course">
 											<div className="course-name">{item.course.name}</div>
 											<div className="course-type">
-												<span className={`type-badge ${item.isLecture ? 'lecture-badge' : 'tutorial-badge'}`}>
-													{item.isLecture ? 'V' : 'Ü'}
-												</span>
+											<span className={`type-badge ${
+													item.course.type === CourseType.LECTURE ? (item.isLecture ? 'lecture-badge' : 'tutorial-badge') :
+													item.course.type === CourseType.SEMINARY ? 'seminary-badge-schedule' :
+													item.course.type === CourseType.PROJECT ? 'project-badge' : ''
+												}`}>
+												{item.course.type == CourseType.LECTURE ? ( item.isLecture ? 'V' : 'Ü') : (
+													item.course.type == CourseType.SEMINARY ? 'S' : (item.course.type == CourseType.PROJECT ? 'P' : ''))
+												}
+											</span>
 											</div>
 										</div>
 									</div>
@@ -144,13 +189,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 		);
 	}
 
-	const timeSlots = [
-		{ start: 8, end: 10 },
-		{ start: 10, end: 12 },
-		{ start: 12, end: 14 },
-		{ start: 14, end: 16 },
-		{ start: 16, end: 18 }
-	];
+	const timeSlots = generateTimeSlots();
 
 	return (
 		<>
@@ -183,34 +222,56 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 						</tr>
 					</thead>
 					<tbody>
-						{timeSlots.length === 0 ? (
-							<tr>
-								<td colSpan={6}>Keine Kurse ausgewählt.</td>
-							</tr>
-						) : (
-							timeSlots.map((slot) => (
-								<tr key={slot.start}>
-									<td>{`${slot.start}:00 - ${slot.end}:00`}</td>
-									{['Mo', 'Di', 'Mi', 'Do', 'Fr'].map(day => {
-										const item = scheduleItems.find(i => i.day === day && i.start === slot.start);
+						{timeSlots.map((slot, slotIndex) => (
+							<tr key={slotIndex}>
+								{/* <td>{`${formatTime(slot.start)}`}</td> */}
+								<td className={slot.start % 2 === 1 ? 'time-soft' : ''}>{`${formatTime(slot.start)}`}</td>
+								{/* { slot.start % 2 === 0 ? <td>{`${formatTime(slot.start)}`}</td> : <td></td> } */}
+								{['Mo', 'Di', 'Mi', 'Do', 'Fr'].map(day => {
+									const cellKey = `${day}-${slotIndex}`;
+									
+									// Skip this cell if it's part of a rowspan from an earlier row
+									if (skipCells[cellKey]) {
+										return null;
+									}
+									
+									const itemsInSlot = getItemsForTimeSlot(day, slotIndex);
+									
+									if (itemsInSlot.length > 0) {
+										const { item, rowSpan } = itemsInSlot[0];
+										
+										// Mark cells to skip in future rows
+										for (let i = 1; i < rowSpan && slotIndex + i < timeSlots.length; i++) {
+											skipCells[`${day}-${slotIndex + i}`] = true;
+										}
+										
 										return (
-											<td key={day} className={item ? (item.isLecture ? 'lecture' : 'tutorial') : ''}>
-												{item && (
-													<>
-														<div className="course-name">{item.course.name}</div>
-														<div className="course-type">
-															<span className={`type-badge ${item.isLecture ? 'lecture-badge' : 'tutorial-badge'}`}>
-																{item.isLecture ? 'V' : 'Ü'}
-															</span>
-														</div>
-													</>
-												)}
+											<td 
+												key={cellKey} 
+												className={item.isLecture ? 'lecture' : 'tutorial'}
+												rowSpan={Math.min(rowSpan, timeSlots.length - slotIndex)}
+											>
+												<div className="course-name">{item.course.name}</div>
+												<div className="course-time">{formatTime(item.start)}-{formatTime(item.end)}</div>
+												<div className="course-type">
+												<span className={`type-badge ${
+													item.course.type === CourseType.LECTURE ? (item.isLecture ? 'lecture-badge' : 'tutorial-badge') :
+													item.course.type === CourseType.SEMINARY ? 'seminary-badge-schedule' :
+													item.course.type === CourseType.PROJECT ? 'project-badge' : ''
+												}`}>
+													{item.course.type == CourseType.LECTURE ? ( item.isLecture ? 'V' : 'Ü') : (
+														item.course.type == CourseType.SEMINARY ? 'S' : (item.course.type == CourseType.PROJECT ? 'P' : ''))
+													}
+												</span>
+												</div>
 											</td>
 										);
-									})}
-								</tr>
-							))
-						)}
+									}
+									
+									return <td key={cellKey}></td>;
+								})}
+							</tr>
+						))}
 					</tbody>
 				</table>
 			</div>

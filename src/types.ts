@@ -28,6 +28,7 @@ export enum CourseType {
     PROJECT = 'project',
     NONE = 'none',
     THESIS = 'thesis',
+    MISCELLANEOUS = 'miscellaneous',
 }
 
 export interface ScheduleItem {
@@ -52,7 +53,9 @@ export interface Conflict {
 export enum CustomEventType {
     PI_LECTURE = "Praktische Informatik",
     FM_LECTURE = "Formale Methoden",
-    GENERAL = "Allgemeine Kompetenzen"
+    GENERAL = "Allgemeine Kompetenzen",
+    SEMINARY = "Seminar",
+    MISCELLANEOUS = "Sonstiges",
 }
 
 export interface CustomEvent {

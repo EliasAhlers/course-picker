@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Course, ScheduleItem, CustomEvent, CourseType } from '../types';
+import { Course, ScheduleItem, CustomEvent, CourseType, CustomEventType } from '../types';
 import { courses } from '../courses';
 
 const useScheduleGenerator = (selectedCourseIds: number[], selectedSemester: string, customEvents?: CustomEvent[]) => {
@@ -15,12 +15,22 @@ const useScheduleGenerator = (selectedCourseIds: number[], selectedSemester: str
 		const newScheduleItems = generateSchedule(selectedCourses, customEvents || [], selectedSemester);
 		setScheduleItems(newScheduleItems);
 
-		const newUniqueTimes = Array.from(new Set(newScheduleItems.map(item => item.start))).sort((a, b) => a - b);
+		let allTimes = new Set<number>();
+		newScheduleItems.forEach(item => {
+			allTimes.add(item.start);
+			allTimes.add(item.end);
+		});
+		
+		if (allTimes.size === 0) {
+			allTimes = new Set([8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+		}
+		
+		const newUniqueTimes = Array.from(allTimes).sort((a, b) => a - b);
 		setUniqueTimes(newUniqueTimes);
 
 		const newGroupedScheduleItems = groupScheduleItemsByDay(newScheduleItems);
 		setGroupedScheduleItems(newGroupedScheduleItems);
-	}, [selectedCourseIds, selectedSemester, customEvents, courses]);
+	}, [selectedCourseIds, selectedSemester, customEvents]);
 
 	const generateSchedule = (courses: Course[], customEvents: CustomEvent[], semester: string): ScheduleItem[] => {
 		const schedule: ScheduleItem[] = [];
@@ -54,7 +64,9 @@ const useScheduleGenerator = (selectedCourseIds: number[], selectedSemester: str
 						domain: '',
 						semester: event.semester,
 						cp: event.cp,
-						type: CourseType.NONE,
+						type: event.type == CustomEventType.FM_LECTURE || event.type == CustomEventType.PI_LECTURE ? CourseType.LECTURE : (
+							event.type == CustomEventType.SEMINARY ? CourseType.SEMINARY : CourseType.MISCELLANEOUS
+						)
 					},
 					day,
 					start,
