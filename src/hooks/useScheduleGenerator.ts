@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Course, ScheduleItem } from '../types';
+import { Course, ScheduleItem, CustomEvent, CourseType } from '../types';
 import { courses } from '../courses';
 
-const useScheduleGenerator = (selectedCourseIds: number[], selectedSemester: string) => {
+const useScheduleGenerator = (selectedCourseIds: number[], selectedSemester: string, customEvents?: CustomEvent[]) => {
 	const [scheduleItems, setScheduleItems] = useState<ScheduleItem[]>([]);
 	const [uniqueTimes, setUniqueTimes] = useState<number[]>([]);
 	const [groupedScheduleItems, setGroupedScheduleItems] = useState<{ [key: string]: ScheduleItem[] }>({});
@@ -12,7 +12,7 @@ const useScheduleGenerator = (selectedCourseIds: number[], selectedSemester: str
 		const selectedCourses = courses.filter(course => selectedCourseIds.includes(course.id) && course.semester === selectedSemester);
 		setAllCourses(selectedCourses);
 
-		const newScheduleItems = generateSchedule(selectedCourses, selectedSemester);
+		const newScheduleItems = generateSchedule(selectedCourses, customEvents || [], selectedSemester);
 		setScheduleItems(newScheduleItems);
 
 		const newUniqueTimes = Array.from(new Set(newScheduleItems.map(item => item.start))).sort((a, b) => a - b);
@@ -20,9 +20,9 @@ const useScheduleGenerator = (selectedCourseIds: number[], selectedSemester: str
 
 		const newGroupedScheduleItems = groupScheduleItemsByDay(newScheduleItems);
 		setGroupedScheduleItems(newGroupedScheduleItems);
-	}, [selectedCourseIds, selectedSemester, courses]);
+	}, [selectedCourseIds, selectedSemester, customEvents, courses]);
 
-	const generateSchedule = (courses: Course[], semester: string): ScheduleItem[] => {
+	const generateSchedule = (courses: Course[], customEvents: CustomEvent[], semester: string): ScheduleItem[] => {
 		const schedule: ScheduleItem[] = [];
 		const daysOrder = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
 
@@ -39,6 +39,29 @@ const useScheduleGenerator = (selectedCourseIds: number[], selectedSemester: str
 
 			addToSchedule(course.schedule, true);
 			addToSchedule(course.tutorial, false);
+		});
+
+		customEvents.filter(event => event.semester === semester && event.schedule).forEach(event => {
+			const parts = event.schedule!.split(', ');
+			parts.forEach(part => {
+				const [day, time] = part.split(' ');
+				const [start, end] = time.split('-').map(Number);
+				schedule.push({
+					course: {
+						id: -1,
+						name: event.name,
+						instructor: '',
+						domain: '',
+						semester: event.semester,
+						cp: event.cp,
+						type: CourseType.NONE,
+					},
+					day,
+					start,
+					end,
+					isLecture: true
+				});
+			});
 		});
 
 		return schedule.sort((a, b) => {

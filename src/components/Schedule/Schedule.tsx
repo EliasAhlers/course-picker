@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import useScheduleGenerator from '../../hooks/useScheduleGenerator';
 import './Schedule.css';
-import { CourseType, Semester } from '../../types';
+import { CourseType, Semester, CustomEvent } from '../../types';
 
 interface ScheduleProps {
 	selectedCourseIds: number[];
 	selectedSemester: string;
 	isMobile: boolean;
+	customEvents: CustomEvent[];
 }
 
-const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester, isMobile }) => {
-	const { scheduleItems, groupedScheduleItems, allCourses } = useScheduleGenerator(selectedCourseIds, selectedSemester);
+const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester, isMobile, customEvents }) => {
+	const { scheduleItems, groupedScheduleItems, allCourses } = useScheduleGenerator(selectedCourseIds, selectedSemester, customEvents);
 
 	const [currentTimePosition, setCurrentTimePosition] = useState(0);
 

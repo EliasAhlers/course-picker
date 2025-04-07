@@ -60,6 +60,7 @@ export interface CustomEvent {
     cp: number;
     semester: string;
     type: CustomEventType;
+    schedule?: string;
 }
 
 export const getEmptyConflict = (): Conflict => {

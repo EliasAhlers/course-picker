@@ -165,6 +165,7 @@ const App: React.FC = () => {
 				selectedCourseIds={selectedCourseIds}
 				selectedSemester={selectedSemesterSchedule}
 				isMobile={isMobile}
+				customEvents={customEvents}
 			/>
 
 			<table>
