@@ -234,7 +234,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 							></tr>
 						)}
 						{timeSlots.map((slot, slotIndex) => (
-							<tr key={slotIndex}>
+							<tr key={slotIndex} className='schedule-row'>
 								{/* <td>{`${formatTime(slot.start)}`}</td> */}
 								<td className={slot.start % 2 === 1 ? 'time-soft' : ''}>{`${formatTime(slot.start)}`}</td>
 								{/* { slot.start % 2 === 0 ? <td>{`${formatTime(slot.start)}`}</td> : <td></td> } */}

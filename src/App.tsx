@@ -125,7 +125,7 @@ const App: React.FC = () => {
 					setSelectedCourseIds(data.selectedCourseIds);
 					setCustomEvents(data.customEvents);
 					setShowBachelorCourses(data.showBachelorCourses);
-					}}
+				}}
 				onChangelogClick={() => setShowChangelog(true)}
 			/>
 			<div className="app-controls">
@@ -205,7 +205,7 @@ const App: React.FC = () => {
 
 			<h2>Eigene Veranstaltungen</h2>
 			<div className="disclaimer">
-				Hier können z.B. Zusatzkompetenzen oder andere Veranstaltungen eingetragen werden, die nicht in der Liste sind.
+				Hier können z.B. Zusatzkompetenzen, Seminare oder andere Veranstaltungen eingetragen werden, die nicht in der Liste sind.
 				Diese werden nicht auf Konflikte überprüft, aber in die CP pro Semester eingerechnet.
 			</div>
 			<CustomEventsTable

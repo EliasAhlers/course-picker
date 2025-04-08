@@ -50,7 +50,6 @@ export const SyncButton = ({ data, onSync, onChangelogClick }: SyncButtonProps) 
 			await syncData(id, data);
 			setSyncId(id);
 			localStorage.setItem('sync_id', id);
-			alert(`Deine sync ID ist: ${id}`);
 		} catch (err: any) {
 			alert('Sync fehlgeschlagen');
 		}
