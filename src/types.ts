@@ -64,6 +64,7 @@ export interface CustomEvent {
     semester: string;
     type: CustomEventType;
     schedule?: string;
+    room?: string;
 }
 
 export const getEmptyConflict = (): Conflict => {

@@ -111,6 +111,12 @@
     background-color: #9b59b6;
 }
 
+.room-info {
+    /* font-size: 0.8em; */
+    color: #666;
+    /* margin-top: 2px; */
+}
+
 .mobile-schedule {
     display: none;
 }
@@ -148,6 +154,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.mobile-schedule-course .room-info {
+    display: inline-block;
+    margin-left: 8px;
+    color: #666;
 }
 
 .mobile-schedule .course-name {

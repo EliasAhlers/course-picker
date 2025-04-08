@@ -163,9 +163,20 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 									.sort((a, b) => a.start - b.start)
 									.map((item, index) => (
 									<div key={index} className={`mobile-schedule-item ${item.isLecture ? 'lecture' : 'tutorial'}`}>
-										<div className="mobile-schedule-time">{`${formatTime(item.start)} - ${formatTime(item.end)}`}</div>
+										<div className="mobile-schedule-time">
+											{`${formatTime(item.start)} - ${formatTime(item.end)}`} im <span></span>
+												{item.course.room && (
+													<span className="room-info">
+														{item.course.room.includes('/') 
+															? (item.isLecture ? item.course.room.split('/')[0] : item.course.room.split('/')[1])
+															: item.course.room	}
+													</span>
+												)}
+										</div>
 										<div className="mobile-schedule-course">
-											<div className="course-name">{item.course.name}</div>
+											<div className="course-name">
+												{item.course.name}
+											</div>
 											<div className="course-type">
 											<span className={`type-badge ${
 													item.course.type === CourseType.LECTURE ? (item.isLecture ? 'lecture-badge' : 'tutorial-badge') :
@@ -230,7 +241,6 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 								{['Mo', 'Di', 'Mi', 'Do', 'Fr'].map(day => {
 									const cellKey = `${day}-${slotIndex}`;
 									
-									// Skip this cell if it's part of a rowspan from an earlier row
 									if (skipCells[cellKey]) {
 										return null;
 									}
@@ -240,7 +250,6 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 									if (itemsInSlot.length > 0) {
 										const { item, rowSpan } = itemsInSlot[0];
 										
-										// Mark cells to skip in future rows
 										for (let i = 1; i < rowSpan && slotIndex + i < timeSlots.length; i++) {
 											skipCells[`${day}-${slotIndex + i}`] = true;
 										}
@@ -252,7 +261,16 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 												rowSpan={Math.min(rowSpan, timeSlots.length - slotIndex)}
 											>
 												<div className="course-name">{item.course.name}</div>
-												<div className="course-time">{formatTime(item.start)}-{formatTime(item.end)}</div>
+												<div className="course-time">
+													{formatTime(item.start)}-{formatTime(item.end)} im <span></span>
+													{item.course.room && (
+														<span className="room-info">
+															{item.course.room.includes('/') 
+																? (item.isLecture ? item.course.room.split('/')[0] : item.course.room.split('/')[1])
+																: item.course.room	}
+														</span>
+													)}
+												</div>
 												<div className="course-type">
 												<span className={`type-badge ${
 													item.course.type === CourseType.LECTURE ? (item.isLecture ? 'lecture-badge' : 'tutorial-badge') :

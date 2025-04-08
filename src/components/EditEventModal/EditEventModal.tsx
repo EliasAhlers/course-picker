@@ -15,6 +15,7 @@ export const EditEventModal: React.FC<EditEventModalProps> = ({ event, onSave, o
     const [type, setType] = React.useState(event?.type || CustomEventType.GENERAL);
     const [semester, setSemester] = React.useState(event?.semester || Semester.WiSe2425);
     const [schedule, setSchedule] = React.useState(event?.schedule || '');
+    const [room, setRoom] = React.useState(event?.room || '');
 
     return (
         <div className="modal-overlay">
@@ -68,6 +69,14 @@ export const EditEventModal: React.FC<EditEventModalProps> = ({ event, onSave, o
                     placeholder="z.B. Mo 14-16, Do 12-14"
                 />
                 
+                <label>Raum (optional):</label>
+                <input
+                    type="text"
+                    value={room}
+                    onChange={(e) => setRoom(e.target.value)}
+                    placeholder="z.B. E23"
+                />
+                
                 <div className="modal-actions">
                     <button onClick={onClose}>Abbrechen</button>
                     <button onClick={() => {
@@ -77,7 +86,8 @@ export const EditEventModal: React.FC<EditEventModalProps> = ({ event, onSave, o
                                 cp,
                                 type,
                                 semester,
-                                schedule: schedule || undefined
+                                schedule: schedule || undefined,
+                                room: room || undefined
                             });
                         }
                     }}>Speichern</button>

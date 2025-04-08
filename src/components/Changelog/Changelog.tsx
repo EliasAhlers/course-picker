@@ -15,6 +15,12 @@ const Changelog: React.FC<ChangelogProps> = ({ isOpen, onClose }) => {
             <div className="modal-content changelog-content">
                 <h2>Changelog</h2>
                 <div className="changelog-section">
+                    <h3>08. April 2025</h3>
+                    <ul>
+                        <li>Rauminformation zu benutzerdefinierten Ereignissen hinzugefügt</li>
+                    </ul>
+                </div>
+                <div className="changelog-section">
                     <h3>07. April 2025</h3>
                     <ul>
                         <li>Position des Sync-Buttons geändert</li>

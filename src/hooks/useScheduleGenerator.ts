@@ -66,7 +66,8 @@ const useScheduleGenerator = (selectedCourseIds: number[], selectedSemester: str
 						cp: event.cp,
 						type: event.type == CustomEventType.FM_LECTURE || event.type == CustomEventType.PI_LECTURE ? CourseType.LECTURE : (
 							event.type == CustomEventType.SEMINARY ? CourseType.SEMINARY : CourseType.MISCELLANEOUS
-						)
+						),
+						room: event.room ?? '',
 					},
 					day,
 					start,
