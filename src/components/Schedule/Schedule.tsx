@@ -25,7 +25,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 			const currentHour = now.getHours() + (now.getMinutes() / 60);
 			if (currentHour >= 8 && currentHour <= 18) {
 				const position = ((currentHour - 8) / 10) * 100;
-				setCurrentTimePosition(position);
+				setCurrentTimePosition(Math.round(position));
 			} else {
 				setCurrentTimePosition(-1);
 			}
@@ -206,21 +206,6 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 		<>
 			{nextEventIndicator()}
 			<div className="schedule-container" style={{ position: 'relative' }}>
-				{currentTimePosition >= 0 && (
-					<div
-						className="current-time-line"
-						style={{
-							top: `calc(${currentTimePosition}% + ${document.getElementsByClassName('scheduleHeader')[0]?.clientHeight ?? 50}px)`,
-							position: 'absolute',
-							left: 0,
-							right: 0,
-							height: '2px',
-							backgroundColor: 'red',
-							zIndex: 1,
-							opacity: 0.3,
-						}}
-					></div>
-				)}
 				<table className="schedule">
 					<thead>
 						<tr className='scheduleHeader' >
@@ -232,7 +217,22 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 							<th>Freitag</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody className="schedule-body">
+						{currentTimePosition >= 0 && (
+							<tr
+								className="current-time-line"
+								style={{
+									top: `calc(${currentTimePosition / 100 * document.getElementsByClassName('schedule-body')[0]?.clientHeight + document.getElementsByClassName('scheduleHeader')[0]?.clientHeight}px)`,
+									position: 'absolute',
+									left: 0,
+									right: 0,
+									height: '2px',
+									backgroundColor: 'red',
+									zIndex: 1,
+									opacity: 0.3,
+								}}
+							></tr>
+						)}
 						{timeSlots.map((slot, slotIndex) => (
 							<tr key={slotIndex}>
 								{/* <td>{`${formatTime(slot.start)}`}</td> */}

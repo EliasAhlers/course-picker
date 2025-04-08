@@ -18,6 +18,7 @@ const Changelog: React.FC<ChangelogProps> = ({ isOpen, onClose }) => {
                     <h3>08. April 2025</h3>
                     <ul>
                         <li>Rauminformation zu benutzerdefinierten Ereignissen hinzugefügt</li>
+                        <li>Timeline Poition gefixt</li>
                     </ul>
                 </div>
                 <div className="changelog-section">
