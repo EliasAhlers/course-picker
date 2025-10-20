@@ -37,7 +37,7 @@ const Schedule: React.FC<ScheduleProps> = ({ selectedCourseIds, selectedSemester
 		return () => clearInterval(interval);
 	}, []);
 
-	if (selectedSemester !== Semester.WiSe2425 && selectedSemester !== Semester.SoSe25) {
+	if (selectedSemester !== Semester.WiSe2425 && selectedSemester !== Semester.SoSe25 && selectedSemester !== Semester.WiSe2526) {
 		return (
 			<div className="disclaimer">
 				<b>Hinweis:</b> Für das Semester {selectedSemester} sind noch keine Zeiten vorhanden, daher kann kein Stundenplan angezeigt werden.

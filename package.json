@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "ssh elias@ahlers.click \"rm -rf /var/www/ahlers.click/html/tools/$npm_package_name/*\" && scp -r dist/* elias@ahlers.click:/var/www/ahlers.click/html/tools/$npm_package_name"
+    "deploy": "ssh elias@173.212.249.199 \"rm -rf /var/www/ahlers.click/html/tools/$npm_package_name/*\" && scp -r dist/* elias@173.212.249.199:/var/www/ahlers.click/html/tools/$npm_package_name"
   },
   "dependencies": {
     "pocketbase": "^0.25.1",

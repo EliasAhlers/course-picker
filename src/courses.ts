@@ -2,8 +2,15 @@ import { Course, CourseType, Semester } from "./types";
 
 export const removedCourseIds: number[] = [
 	9,
+	14,
+	15,
+	17,
 	23,
-	28
+	26,
+	28,
+	109,
+	422,
+	427,
 ];
 
 export const courses: Course[] = [
@@ -39,19 +46,21 @@ export const courses: Course[] = [
 	{ id: 201, type: CourseType.NONE, name: "Masterseminar", instructor: "", domain: "", semester: Semester.SoSe25, cp: 3 },
 
 	// ====================== WiSe2526 ======================
-	{ id: 16, type: CourseType.LECTURE, name: "Computer Vision", instructor: "Jiang", domain: "PI", semester: Semester.WiSe2526, cp: 6 },
-	{ id: 17, type: CourseType.LECTURE, name: "Deep Reinforcement Learning", instructor: "Schilling", domain: "PI", semester: Semester.WiSe2526, cp: 6 },
-	{ id: 18, type: CourseType.LECTURE, name: "Sicherheit in eingebetteten Systemen", instructor: "Herber", domain: "PI", semester: Semester.WiSe2526, cp: 6 },
-	{ id: 26, type: CourseType.LECTURE, name: "Simulation von Kommunikationssystemen", instructor: "da Silva", domain: "PI", semester: Semester.WiSe2526, cp: 6, bachelor: true },
+	{ id: 16, type: CourseType.LECTURE, name: "Computer Vision", instructor: "Jiang", domain: "PI", semester: Semester.WiSe2526, cp: 6, schedule: "Di 12-14, Mi 14-16", room: "M5M6" },
+	// { id: 17, type: CourseType.LECTURE, name: "Deep Reinforcement Learning", instructor: "Schilling", domain: "PI", semester: Semester.WiSe2526, cp: 6 },
+	{ id: 18, type: CourseType.LECTURE, name: "Sicherheit in eingebetteten Systemen", instructor: "Herber", domain: "PI", semester: Semester.WiSe2526, cp: 6, schedule: "Mi 10-12, Do 10-12", room: "M5" },
+	// { id: 26, type: CourseType.LECTURE, name: "Simulation von Kommunikationssystemen", instructor: "da Silva", domain: "PI", semester: Semester.WiSe2526, cp: 6, bachelor: true },
 	{ id: 108, type: CourseType.PRACTICAL, name: "Computer Vision Praktikum", instructor: "Jiang", domain: "PI", semester: Semester.WiSe2526, cp: 3, dependsOn: 16 },
-	{ id: 109, type: CourseType.PRACTICAL, name: "Deep Reinforcement Learning Praktikum", instructor: "Schilling", domain: "PI", semester: Semester.WiSe2526, cp: 3, dependsOn: 17 },
-	{ id: 110, type: CourseType.LECTURE, name: "Empirical Security Analysis and Engineering", instructor: "Holz", domain: "PI", semester: Semester.WiSe2526, cp: 6 },
+	// { id: 109, type: CourseType.PRACTICAL, name: "Deep Reinforcement Learning Praktikum", instructor: "Schilling", domain: "PI", semester: Semester.WiSe2526, cp: 3, dependsOn: 17 },
+	{ id: 110, type: CourseType.LECTURE, name: "Empirical Security Analysis and Engineering", instructor: "Holz", domain: "PI", semester: Semester.WiSe2526, cp: 6, schedule: "Mo 10-12" },
 	{ id: 13, type: CourseType.LECTURE, name: "Thema aus dem Bereich Algorithmik", instructor: "", domain: "FM", semester: Semester.WiSe2526, cp: 9 },
-	{ id: 14, type: CourseType.LECTURE, name: "Automated Planning and Acting", instructor: "Braun", domain: "FM", semester: Semester.WiSe2526, cp: 6 },
-	{ id: 15, type: CourseType.LECTURE, name: "Lambda-Kalkül und funkt. Sprachen", instructor: "Lammers", domain: "FM", semester: Semester.WiSe2526, cp: 6 },
-	{ id: 25, type: CourseType.LECTURE, name: "Modellieren mit Automaten und Wahrscheinlichkeiten", instructor: "Remke", domain: "FM", semester: Semester.WiSe2526, cp: 6 },
+	// { id: 14, type: CourseType.LECTURE, name: "Automated Planning and Acting", instructor: "Braun", domain: "FM", semester: Semester.WiSe2526, cp: 6 },
+	// { id: 15, type: CourseType.LECTURE, name: "Lambda-Kalkül und funkt. Sprachen", instructor: "Lammers", domain: "FM", semester: Semester.WiSe2526, cp: 6 },
+	{ id: 25, type: CourseType.LECTURE, name: "Modellierung mit Automaten und Wahrscheinlichkeiten", instructor: "Remke", domain: "FM", semester: Semester.WiSe2526, cp: 6, schedule: "Mo 14-16, Do 14-16", room: "M5" },
 	{ id: 104, type: CourseType.SEMINARY, name: "Informatikseminar WiSe 25/26", instructor: "", domain: "", semester: Semester.WiSe2526, cp: 6 },
 	{ id: 105, type: CourseType.PROJECT, name: "Projektseminar WiSe 25/26", instructor: "", domain: "", semester: Semester.WiSe2526, cp: 15 },
+	{ id: 320, type: CourseType.LECTURE, name: "Ressourceneffiziente Algorithmen", instructor: "Vahrenhold", domain: "FM", semester: Semester.WiSe2526, cp: 6, bachelor: false, schedule: "Mo 12-14, Do 12-14", room: "M5"  },
+	{ id: 321, type: CourseType.LECTURE, name: "Einführung Neuronale Netze", instructor: "Schilling", domain: "PI", semester: Semester.WiSe2526, cp: 6, bachelor: true, schedule: "Di 10-12" },
 	{ id: 300, type: CourseType.THESIS, name: "Masterarbeit", instructor: "", domain: "", semester: Semester.WiSe2526, cp: 27 },
 	{ id: 301, type: CourseType.NONE, name: "Masterseminar", instructor: "", domain: "", semester: Semester.WiSe2526, cp: 3 },
 
@@ -61,9 +70,12 @@ export const courses: Course[] = [
 	{ id: 425, type: CourseType.LECTURE, name: "Autonome Systeme", instructor: "Schilling", domain: "PI", semester: Semester.SoSe26, cp: 6, bachelor: true },
 	{ id: 420, type: CourseType.LECTURE, name: "Compilerbau", instructor: "Lammers", domain: "FM", semester: Semester.SoSe26, cp: 6, bachelor: true },
 	{ id: 421, type: CourseType.LECTURE, name: "Mustererkennung", instructor: "Jiang", domain: "FM", semester: Semester.SoSe26, cp: 6, bachelor: true },
-	{ id: 422, type: CourseType.PRACTICAL, name: "Mustererkennung Praktikum", instructor: "Jiang", domain: "FM", semester: Semester.SoSe26, cp: 3, dependsOn: 421 },
-	{ id: 426, type: CourseType.LECTURE, name: "Komplexitätstheorie", instructor: "Müller-Olm", domain: "FM", semester: Semester.SoSe26, cp: 9 },
-	{ id: 427, type: CourseType.LECTURE, name: "Simulation und statistisches Model Checking", instructor: "Dr. da Silva", domain: "FM", semester: Semester.SoSe26, cp: 6 },
+	// { id: 422, type: CourseType.PRACTICAL, name: "Mustererkennung Praktikum", instructor: "Jiang", domain: "FM", semester: Semester.SoSe26, cp: 3, dependsOn: 421 },
+	{ id: 426, type: CourseType.LECTURE, name: "Komplexitätstheorie", instructor: "Müller-Olm", domain: "FM", semester: Semester.SoSe26, cp: 9, bachelor: false },
+	// { id: 427, type: CourseType.LECTURE, name: "Simulation und statistisches Model Checking", instructor: "Dr. da Silva", domain: "FM", semester: Semester.SoSe26, cp: 6 },
+	{ id: 428, type: CourseType.LECTURE, name: "Simulation von Kommunikatonssystemen", instructor: "da Silva", domain: "PI", semester: Semester.SoSe26, cp: 6, bachelor: true },
+	{ id: 430, type: CourseType.LECTURE, name: "Automated Planning and Acting", instructor: "Braun", domain: "FM", semester: Semester.SoSe26, cp: 6, bachelor: false },
+	{ id: 431, type: CourseType.LECTURE, name: "Aus dem Bereich Algorithmik", instructor: "", domain: "FM", semester: Semester.SoSe26, cp: 6 },
 	{ id: 400, type: CourseType.THESIS, name: "Masterarbeit", instructor: "", domain: "", semester: Semester.SoSe26, cp: 27 },
 	{ id: 401, type: CourseType.NONE, name: "Masterseminar", instructor: "", domain: "", semester: Semester.SoSe26, cp: 3 },
 	{ id: 470, type: CourseType.SEMINARY, name: "Informatikseminar SoSe 26", instructor: "", domain: "", semester: Semester.SoSe26, cp: 6 },

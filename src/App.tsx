@@ -20,7 +20,7 @@ const MAX_LECTURES = 11;
 
 const App: React.FC = () => {
 	const [selectedCourseIds, setSelectedCourseIds] = useLocalStorage<number[]>('selectedCourseIds', []);
-	const [selectedSemesterSchedule, setSelectedSemesterSchedule] = useState<string>(Semester.SoSe25);
+	const [selectedSemesterSchedule, setSelectedSemesterSchedule] = useState<string>(Semester.WiSe2526);
 	const [selectedSemesterList, setSelectedSemesterList] = useState<string>('all');
 	const [showBachelorCourses, setShowBachelorCourses] = useLocalStorage<boolean>('showBachelorCourses', false);
 	const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
@@ -109,7 +109,7 @@ const App: React.FC = () => {
 			<h1>Vorlesungsauswahl-Tool für den Informatik Master Uni Münster</h1>
 
 			<div className="disclaimer">
-				<b>Hinweis:</b> Ich übernehme keine Verantwortung für die Richtigkeit der Daten oder eventuelle Fehler! Besonders bei den CP bin ich mir nicht sicher, ob sie korrekt sind, einige sind Schätzungen. <b>Letztes Update: 24.03.2025</b>
+				<b>Hinweis:</b> Ich übernehme keine Verantwortung für die Richtigkeit der Daten oder eventuelle Fehler! Besonders bei den CP bin ich mir nicht sicher, ob sie korrekt sind, einige (besonders WiSe25/26 und SoSe 26) sind Schätzungen. <b>Letztes Update: 20.10.2025</b>
 				<br /><br />
 				Alle Daten bleiben lokal im Browser gespeichert und werden nicht an einen Server gesendet. Beim Löschen des Browserspeichers für diese Seite gehen alle Daten verloren! <br></br>
 				<b>Ausnahme:</b> Wenn du die Sync-Funktion nutzt, werden deine Daten und zusätzliche personenbezogene Daten wie deine IP-Adresse auf einem Server gespeichert. Diese Daten werden nicht an Dritte weitergegeben und nur für die Sync-Funktion genutzt.

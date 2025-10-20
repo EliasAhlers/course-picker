@@ -51,7 +51,9 @@ const CustomEventsTable: React.FC<CustomEventsTableProps> = ({ customEvents, set
                                 <td>
                                     <div className="event-actions">
                                         <button className="icon-button" onClick={() => setEditingEvent(event)}>✎</button>
-                                        <button className="icon-button" onClick={() => setCustomEvents(prev => prev.filter(e => e !== event))}>🗑️</button>
+                                        <button className="icon-button" onClick={() => {
+                                            if (confirm('Wirklich löschen?')) { setCustomEvents(prev => prev.filter(e => e !== event)) }
+                                        }}>🗑️</button>
                                     </div>
                                 </td>
                             </tr>
